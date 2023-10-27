@@ -1,4 +1,4 @@
-# shiba
+# frontend_shibaa_app
 
 A new Flutter project.
 

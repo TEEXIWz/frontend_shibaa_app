@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "shiba" "\0"
+            VALUE "FileDescription", "frontend_shibaa_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "shiba" "\0"
+            VALUE "InternalName", "frontend_shibaa_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "shiba.exe" "\0"
-            VALUE "ProductName", "shiba" "\0"
+            VALUE "OriginalFilename", "frontend_shibaa_app.exe" "\0"
+            VALUE "ProductName", "frontend_shibaa_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
