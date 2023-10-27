@@ -1,6 +1,6 @@
 {
-    "name": "frontend_shibaa_app",
-    "short_name": "frontend_shibaa_app",
+    "name": "shiba",
+    "short_name": "shiba",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
