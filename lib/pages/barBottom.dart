@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shiba/pages/addPost.dart';
-import 'package:shiba/pages/homePage.dart';
-import 'package:shiba/pages/notiPage.dart';
-import 'package:shiba/pages/profilePage.dart';
-import 'package:shiba/pages/searhPage.dart';
+import 'package:frontend_shibaa_app/pages/addPost.dart';
+import 'package:frontend_shibaa_app/pages/homePage.dart';
+import 'package:frontend_shibaa_app/pages/notiPage.dart';
+import 'package:frontend_shibaa_app/pages/profilePage.dart';
+import 'package:frontend_shibaa_app/pages/searhPage.dart';
 
 
 class BarBottom extends StatefulWidget {

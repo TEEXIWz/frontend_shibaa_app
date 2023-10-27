@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shiba/pages/SignUpPage.dart';
-import 'package:shiba/pages/barBottom.dart';
+import 'package:frontend_shibaa_app/pages/SignUpPage.dart';
+import 'package:frontend_shibaa_app/pages/barBottom.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,7 +27,7 @@ class LoginPageState extends State<LoginPage> {
                 width: 150),
             const SizedBox(height: 20),
             const Text(
-              'Shibaa',
+              'frontend_shibaa_appa',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

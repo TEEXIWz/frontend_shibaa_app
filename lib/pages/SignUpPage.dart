@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shiba/pages/loginpage.dart';
+import 'package:frontend_shibaa_app/pages/loginpage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
