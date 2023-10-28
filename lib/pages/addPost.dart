@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPostPage extends StatefulWidget {
   const AddPostPage({Key? key}) : super(key: key);
@@ -8,6 +14,9 @@ class AddPostPage extends StatefulWidget {
 }
 
 class _AddPostPageState extends State<AddPostPage> {
+  File? _selectImg;
+  String? bs64;
+  String btnImg = 'เพิ่มรูป';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,13 +52,56 @@ class _AddPostPageState extends State<AddPostPage> {
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                'เพิ่มรูป',
-                style: TextStyle(fontSize: 15),
+              const TextField(
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 5,
+                maxLength: 50,
+                decoration: InputDecoration(
+                  hintText: 'พิมพ์อะไรสักอย่าง..',
+                  border: InputBorder.none,
+                ),
               ),
               const SizedBox(
                 height: 10,
               ),
+              // (_selectImg != null) ? Image.file(_selectImg!) : Container(),
+              (bs64 != null) ? Stack(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    // height: 300,
+                    // width: 350,
+                    child: Image.memory(
+                                  base64Decode(bs64!),
+                                  height: 300,
+                                  width: 350,
+                                  fit: BoxFit.cover,
+                                  scale: 0.8,
+                                  ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      color: Colors.white,
+                      iconSize: 30,
+                      onPressed: (){
+                        
+                      },
+                      icon: const Icon(
+                        Icons.clear
+                      ),
+                    ),
+                  )
+                ],
+              ) : Container(),
+              // (bs64 != null) ? Image.memory(
+              //                     base64Decode(bs64!),
+              //                     height: 300,
+              //                     width: 350,
+              //                     fit: BoxFit.cover,
+              //                     scale: 0.8,
+              //                     ) : Container(),
               // const SizedBox(
               //   height: 50,
               //   child: TextField(
@@ -60,43 +112,65 @@ class _AddPostPageState extends State<AddPostPage> {
               //   ),
               // ),
               const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                'เพิ่มข้อความ',
-                style: TextStyle(fontSize: 15),
-              ),
-              const SizedBox(
                 height: 10,
               ),
-              const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'พิมพ์อะไรสักอย่าง..',
-                    border: OutlineInputBorder(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      _pickImage();
+                    // Navigator.pushReplacement(context,
+                    //     MaterialPageRoute(builder: (context) => const BarBottom()));
+                    },
+                    style: ButtonStyle(
+                      minimumSize:
+                          MaterialStateProperty.all<Size>(const Size(80,40)),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
+                    ),
+                    child: Text(
+                      btnImg,
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
-              ),
-              const SizedBox(height: 200),
-              ElevatedButton(
-                 onPressed: () {
-                // Navigator.pushReplacement(context,
-                //     MaterialPageRoute(builder: (context) => const BarBottom()));
-              },
-              style: ButtonStyle(
-                minimumSize:
-                    MaterialStateProperty.all<Size>(const Size(400,50)),
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
-              ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async{
+                    // Navigator.pushReplacement(context,
+                    //     MaterialPageRoute(builder: (context) => const BarBottom()));
+                    },
+                    style: ButtonStyle(
+                      minimumSize:
+                          MaterialStateProperty.all<Size>(const Size(400,50)),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
+                    ),
 
-              child: const Text(
-                'Post',
-                style: TextStyle(fontSize: 18),
+                    child: const Text(
+                      'Post',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ],
               ),
-              ), 
             ],
           ),
         ),
       ),
     );
+  }
+  Future _pickImage() async{
+    final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _selectImg = File(returnedImage!.path);
+    });
+    List<int> imagebs64 = File(_selectImg!.path).readAsBytesSync();
+    bs64 = base64Encode(imagebs64);
+    btnImg = 'เปลี่ยนรูป';
   }
 }
