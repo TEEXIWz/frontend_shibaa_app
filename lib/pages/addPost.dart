@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import '../Services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddPostPage extends StatefulWidget {
@@ -17,6 +17,8 @@ class _AddPostPageState extends State<AddPostPage> {
   File? _selectImg;
   String? bs64;
   String btnImg = 'เพิ่มรูป';
+  final desController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,12 +54,13 @@ class _AddPostPageState extends State<AddPostPage> {
               const SizedBox(
                 height: 20,
               ),
-              const TextField(
+              TextField(
+                controller: desController,
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 5,
                 maxLength: 50,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'พิมพ์อะไรสักอย่าง..',
                   border: InputBorder.none,
                 ),
@@ -132,7 +135,7 @@ class _AddPostPageState extends State<AddPostPage> {
                     ),
                     child: Text(
                       btnImg,
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                   const SizedBox(
@@ -172,5 +175,13 @@ class _AddPostPageState extends State<AddPostPage> {
     List<int> imagebs64 = File(_selectImg!.path).readAsBytesSync();
     bs64 = base64Encode(imagebs64);
     btnImg = 'เปลี่ยนรูป';
+  }
+  void submitData(){
+    final description = desController.text;
+
+    final data = {
+      "img" : bs64
+    };
+    
   }
 }

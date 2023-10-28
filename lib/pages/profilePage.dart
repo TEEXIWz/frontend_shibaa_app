@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import '../Services.dart';
+import 'package:frontend_shibaa_app/models/timgs.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -8,6 +12,23 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Timgs? timgs;
+  bool isLoading = false;
+
+  void initState(){
+    super.initState();
+    String? title;
+    isLoading = true;
+    title = 'Loading products...';
+    timgs = Timgs();
+
+    Services.getTimgs().then((timgsFromServer){
+      setState(() {
+        timgs = timgsFromServer;
+        isLoading = false;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +40,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child: isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          ) 
+          : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
@@ -110,8 +135,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           const SizedBox(height: 10,),
-          Image.network(
-            'https://media.istockphoto.com/id/1253629795/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/tteokbokki-%E0%B8%81%E0%B8%B1%E0%B8%9A%E0%B9%84%E0%B8%82%E0%B9%88%E0%B9%83%E0%B8%99%E0%B8%8A%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B5%E0%B9%80%E0%B8%97%E0%B8%B2%E0%B8%9A%E0%B8%99%E0%B9%82%E0%B8%95%E0%B9%8A%E0%B8%B0%E0%B8%84%E0%B8%AD%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B5%E0%B8%95-tteok-bokki-%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%AB%E0%B8%A5%E0%B8%B5%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B9%80%E0%B8%84%E0%B9%89%E0%B8%81%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7.jpg?s=612x612&w=0&k=20&c=AQCLOre-Y9-ciPMTrb4ARYPwEecNcRd8aH8hwvigR8o=',
+          // Image.network(
+          //   'https://media.istockphoto.com/id/1253629795/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/tteokbokki-%E0%B8%81%E0%B8%B1%E0%B8%9A%E0%B9%84%E0%B8%82%E0%B9%88%E0%B9%83%E0%B8%99%E0%B8%8A%E0%B8%B2%E0%B8%A1%E0%B8%AA%E0%B8%B5%E0%B9%80%E0%B8%97%E0%B8%B2%E0%B8%9A%E0%B8%99%E0%B9%82%E0%B8%95%E0%B9%8A%E0%B8%B0%E0%B8%84%E0%B8%AD%E0%B8%99%E0%B8%81%E0%B8%A3%E0%B8%B5%E0%B8%95-tteok-bokki-%E0%B9%80%E0%B8%9B%E0%B9%87%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%80%E0%B8%81%E0%B8%B2%E0%B8%AB%E0%B8%A5%E0%B8%B5%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%A1%E0%B8%B5%E0%B9%80%E0%B8%84%E0%B9%89%E0%B8%81%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7.jpg?s=612x612&w=0&k=20&c=AQCLOre-Y9-ciPMTrb4ARYPwEecNcRd8aH8hwvigR8o=',
+          //   fit: BoxFit.cover,
+          // ),
+          Image.memory(
+            base64Decode(timgs!.timgs[2].img),
             fit: BoxFit.cover,
           ),
           const Padding(
