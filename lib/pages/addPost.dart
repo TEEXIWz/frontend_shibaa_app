@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:multiselect/multiselect.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../Services.dart';
@@ -20,6 +20,8 @@ class _AddPostPageState extends State<AddPostPage> {
   String btnImg = 'เพิ่มรูป';
   final desController = TextEditingController();
 
+  List<String> tags = ['อาหาร', 'ท่องเที่ยว', 'กีฬา', 'เกม', 'การ์ตูน', 'ความงาม','สุขภาพ','อื่นๆ'];
+  List<String> selectedTags = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,7 @@ class _AddPostPageState extends State<AddPostPage> {
             'https://cdn-icons-png.flaticon.com/512/2171/2171947.png',
             width: 10),
       ),
-      body:  SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
@@ -70,35 +72,33 @@ class _AddPostPageState extends State<AddPostPage> {
                 height: 10,
               ),
               // (_selectImg != null) ? Image.file(_selectImg!) : Container(),
-              (bs64 != null) ? Stack(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    // height: 300,
-                    // width: 350,
-                    child: Image.memory(
-                                  base64Decode(bs64!),
-                                  height: 300,
-                                  width: 350,
-                                  fit: BoxFit.cover,
-                                  scale: 0.8,
-                                  ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      color: Colors.white,
-                      iconSize: 30,
-                      onPressed: (){
-                        
-                      },
-                      icon: const Icon(
-                        Icons.clear
-                      ),
-                    ),
-                  )
-                ],
-              ) : Container(),
+              (bs64 != null)
+                  ? Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          // height: 300,
+                          // width: 350,
+                          child: Image.memory(
+                            base64Decode(bs64!),
+                            height: 300,
+                            width: 350,
+                            fit: BoxFit.cover,
+                            scale: 0.8,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            color: Colors.white,
+                            iconSize: 30,
+                            onPressed: () {},
+                            icon: const Icon(Icons.clear),
+                          ),
+                        )
+                      ],
+                    )
+                  : Container(),
               // (bs64 != null) ? Image.memory(
               //                     base64Decode(bs64!),
               //                     height: 300,
@@ -125,34 +125,43 @@ class _AddPostPageState extends State<AddPostPage> {
                   ElevatedButton(
                     onPressed: () async {
                       _pickImage();
-                    // Navigator.pushReplacement(context,
-                    //     MaterialPageRoute(builder: (context) => const BarBottom()));
+                      // Navigator.pushReplacement(context,
+                      //     MaterialPageRoute(builder: (context) => const BarBottom()));
                     },
                     style: ButtonStyle(
                       minimumSize:
-                          MaterialStateProperty.all<Size>(const Size(80,40)),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
+                          MaterialStateProperty.all<Size>(const Size(80, 40)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFFF8721D)),
                     ),
                     child: Text(
                       btnImg,
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
+                  DropDownMultiSelect(
+                    options: tags,
+                    selectedValues: selectedTags,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedTags = value;
+                      });
+                    },
+                    whenEmpty: 'เลือกหมวดหมู่',
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       submitData();
                     },
                     style: ButtonStyle(
                       minimumSize:
-                          MaterialStateProperty.all<Size>(const Size(400,50)),
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
+                          MaterialStateProperty.all<Size>(const Size(400, 50)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFFF8721D)),
                     ),
-
                     child: const Text(
                       'Post',
                       style: TextStyle(fontSize: 18),
@@ -166,8 +175,10 @@ class _AddPostPageState extends State<AddPostPage> {
       ),
     );
   }
-  Future _pickImage() async{
-    final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+  Future _pickImage() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
       _selectImg = File(returnedImage!.path);
@@ -176,21 +187,15 @@ class _AddPostPageState extends State<AddPostPage> {
     bs64 = base64Encode(imagebs64);
     btnImg = 'เปลี่ยนรูป';
   }
-  void submitData() async{
+
+  void submitData() async {
     final description = desController.text;
 
-    final data = {
-      "uid" : '2',
-      "description" : description,
-      "img" : bs64
-    };
+    final data = {"uid": '2', "description": description, "img": bs64};
 
     const url = 'http://192.168.1.15/backend_shibaa_app/post';
     final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(data)
-    );
+    final response = await http.post(uri, body: jsonEncode(data));
 
     print(response.body);
   }
