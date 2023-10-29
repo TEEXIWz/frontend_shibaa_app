@@ -19,8 +19,25 @@ class  _SearchPageState extends State<SearchPage> {
             'https://cdn-icons-png.flaticon.com/512/2171/2171947.png',
             width: 10),
       ),
-      body: const Center(
-        child: Text('This is my search page!'),
+      body: Center(
+         child: Column(
+          children: <Widget>[
+            Padding(
+              padding:  const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (value) {
+                  
+                },
+                decoration: const InputDecoration(
+                    labelText: "Search",
+                    hintText: "Search",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+              ),
+            ),
+          ]
+         ),
       ),
     );
   }
