@@ -1,30 +1,30 @@
 import 'dart:convert';
-import 'package:frontend_shibaa_app/models/timg.dart';
-import 'package:frontend_shibaa_app/models/timgs.dart';
+import 'package:frontend_shibaa_app/models/post.dart';
+import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:http/http.dart' as http;
 
 class Services{
   static const String url = "http://192.168.1.15/backend_shibaa_app/post";
 
-  static Future<Timgs> getTimgs() async {
+  static Future<Posts> getPosts() async {
     try {
       final response = await http.get(Uri.parse(url));
       if (200 == response.statusCode) {
-        return parseTimgs(response.body);
+        return parsePosts(response.body);
       } else {
-        return Timgs();
+        return Posts();
       }
     } catch (e) {
       print('Error ${e.toString()}');
-      return Timgs();
+      return Posts();
     }
   }
 
-  static Timgs parseTimgs(String responseBody) {
+  static Posts parsePosts(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    List<Timg> timgs = parsed.map<Timg>((json) => Timg.fromJson(json)).toList();
-    Timgs p = Timgs();
-    p.timgs = timgs;
+    List<Post> posts = parsed.map<Post>((json) => Post.fromJson(json)).toList();
+    Posts p = Posts();
+    p.posts = posts;
     return p;
   }
 

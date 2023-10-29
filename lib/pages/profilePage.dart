@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import '../Services.dart';
-import 'package:frontend_shibaa_app/models/timgs.dart';
+import 'package:frontend_shibaa_app/models/posts.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,7 +12,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Timgs? timgs;
+  Posts? posts;
   bool isLoading = false;
 
   @override
@@ -21,11 +21,11 @@ class _ProfilePageState extends State<ProfilePage> {
     String? title;
     isLoading = true;
     title = 'Loading products...';
-    timgs = Timgs();
+    posts = Posts();
 
-    Services.getTimgs().then((timgsFromServer) {
+    Services.getPosts().then((postsFromServer) {
       setState(() {
-        timgs = timgsFromServer;
+        posts = postsFromServer;
         isLoading = false;
       });
     });
@@ -34,7 +34,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF7F7F7),
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Image.network(

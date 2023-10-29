@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:frontend_shibaa_app/Services.dart';
+import 'package:frontend_shibaa_app/models/posts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,6 +12,26 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  Posts? posts;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    String? title;
+    isLoading = true;
+    title = 'Loading products...';
+    posts = Posts();
+
+    Services.getPosts().then((postsFromServer) {
+      setState(() {
+        posts = postsFromServer;
+        print(posts);
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -62,53 +86,140 @@ class HomePageState extends State<HomePage> {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.search, color: Color(0xFFF8721D)),
-              onPressed: () {},
+              icon: const Icon(
+                Icons.search,
+                color: Color(0xFFF8721D)
+              ),
+              onPressed: () {
+
+              },
             ),
           ],
         ),
-        body:const TabBarView(
-          children: <Widget>[
-            Card(
-               clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
+        body: Container(
+          padding: const EdgeInsets.all(10.0),
+          child: isLoading
+            ? const Center(
+              child: CircularProgressIndicator(),
+            ) 
+            : Column(
+            children: <Widget>[
+              list(),
+            ],
+          ),
+        )
+        // TabBarView(
+        //   children: <Widget>[
+        //     SingleChildScrollView(
+        //       child: Column(
+        //         children: <Widget>[
+        //           list()
+        //         ],
+        //       ),
+        //     )
+        //   ],
+        // ),
+      ),
+    );
+  }
+
+  Widget list(){
+    return Expanded(
+      child: ListView.builder(
+        // ignore: unnecessary_null_comparison
+        itemCount: posts!.posts == null ? 0 : posts!.posts.length,
+        itemBuilder: (BuildContext context, int index) {
+        return post(index);
+        },
+      ),
+    );
+  }
+
+  Widget post(int index) {
+    bool liked = false;
+    return Card(
+       shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: NetworkImage(
+                      "https://i.pinimg.com/564x/26/dc/3c/26dc3c8e0b156e8eeeaf75964281058f.jpg"),
+                  backgroundColor: Colors.transparent,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "LnwCatCat2000",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Text("1h"),
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Image.memory(base64Decode(posts!.posts[index].img),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                posts!.posts[index].description
               ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10,
+            ),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                    padding: const EdgeInsets.only(left: 5,bottom: 3),
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      liked = true;
+                    },
+                    icon: liked == true
+                        ? const Icon(
+                            Icons.pets,
+                            color: Color(0xFFF8721D),
+                          )
+                        : const Icon(
+                            Icons.pets_outlined,
+                            color: Colors.black54,
+                          )
+                ),
+                const SizedBox(width: 8,),
+                Text(
+                  posts!.posts[index].liked.toString(),
+                  style: const TextStyle(
+                    fontSize: 16,
                   ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                      ),
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: NetworkImage(
-                            'https://i.pinimg.com/564x/26/dc/3c/26dc3c8e0b156e8eeeaf75964281058f.jpg'),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'LnwCatCat2000',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ]
             ),
           ],
         ),
       ),
     );
   }
+
 }
