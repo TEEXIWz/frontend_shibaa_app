@@ -277,7 +277,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future _pickImage() async{
-    final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery,maxHeight: 800,maxWidth: 800);
 
     setState(() {
       _selectImg = File(returnedImage!.path);

@@ -146,15 +146,15 @@ class HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            const Row(
+            Row(
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: NetworkImage(
-                      "https://i.pinimg.com/564x/26/dc/3c/26dc3c8e0b156e8eeeaf75964281058f.jpg"),
+                  backgroundImage: 
+                    MemoryImage(base64Decode(posts!.posts[index].uimg)),
                   backgroundColor: Colors.transparent,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Column(
@@ -162,14 +162,14 @@ class HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "LnwCatCat2000",
+                      posts!.posts[index].username,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
-                Spacer(),
-                Text("1h"),
+                const Spacer(),
+                const Text("1h"),
               ],
             ),
             const SizedBox(

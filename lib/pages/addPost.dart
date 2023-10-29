@@ -183,7 +183,7 @@ class _AddPostPageState extends State<AddPostPage> {
 
   Future _pickImage() async {
     final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+        await ImagePicker().pickImage(source: ImageSource.gallery,maxHeight: 800,maxWidth: 800);
 
     setState(() {
       _selectImg = File(returnedImage!.path);
