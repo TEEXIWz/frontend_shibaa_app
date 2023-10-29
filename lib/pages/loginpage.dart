@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-
+   bool _isPasswordVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,11 +82,22 @@ class LoginPageState extends State<LoginPage> {
               height: 50,
               child: TextField(
                 controller: _passwordController,
-                decoration: const InputDecoration(
+               obscureText: !_isPasswordVisible,
+                decoration:  InputDecoration(
                   hintText: 'Enter your password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton( 
+                    icon : Icon(_isPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                   
                 ),
-                obscureText: true,
               ),
             ),
             const SizedBox(height: 5),

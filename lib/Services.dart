@@ -4,11 +4,11 @@ import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:http/http.dart' as http;
 
 class Services{
-  static const String url = "http://192.168.1.15/backend_shibaa_app/post";
+  static const String url = "http://192.168.1.15/backend_shibaa_app";
 
   static Future<Posts> getPosts() async {
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse('$url/post'));
       if (200 == response.statusCode) {
         return parsePosts(response.body);
       } else {
