@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   Posts? posts;
   bool isLoading = false;
+  bool liked = false;
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 8, // กำหนดจำนวน tab
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 250, 243, 243),
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: Image.network(
@@ -97,13 +98,12 @@ class HomePageState extends State<HomePage> {
           ],
         ),
         body: Container(
-          padding: const EdgeInsets.all(10.0),
           child: isLoading
             ? const Center(
               child: CircularProgressIndicator(),
             ) 
             : Column(
-            children: <Widget>[
+              children: <Widget>[
               list(),
             ],
           ),
@@ -137,40 +137,41 @@ class HomePageState extends State<HomePage> {
 
   Widget post(int index) {
     bool liked = false;
-    return Card(
-       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-      ),
+    return Container(
+      padding: const EdgeInsets.only(top: 10,bottom: 10),
       color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
+      // child: Padding(
+      //   padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: 
-                    MemoryImage(base64Decode(posts!.posts[index].uimg)),
-                  backgroundColor: Colors.transparent,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      posts!.posts[index].username,
-                      style:
-                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                const Text("1h"),
-              ],
+            Padding(
+              padding: const EdgeInsets.only(left: 12,right: 12),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: 
+                      MemoryImage(base64Decode(posts!.posts[index].uimg)),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        posts!.posts[index].username,
+                        style:
+                            const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  const Text("1h"),
+                ],
+              ),
             ),
             const SizedBox(
               height: 5,
@@ -180,45 +181,52 @@ class HomePageState extends State<HomePage> {
             const SizedBox(
               height: 5,
             ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                posts!.posts[index].description
-              ),
-            ),
-            
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                    padding: const EdgeInsets.only(left: 5,bottom: 3),
-                    constraints: const BoxConstraints(),
-                    onPressed: () {
-                      liked = true;
-                    },
-                    icon: liked == true
-                        ? const Icon(
-                            Icons.pets,
-                            color: Color(0xFFF8721D),
-                          )
-                        : const Icon(
-                            Icons.pets_outlined,
-                            color: Colors.black54,
-                          )
-                ),
-                const SizedBox(width: 8,),
-                Text(
-                  posts!.posts[index].liked.toString(),
-                  style: const TextStyle(
-                    fontSize: 16,
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            
+                          },
+                          icon: liked == true
+                              ? const Icon(
+                                  Icons.pets,
+                                  color: Color(0xFFF8721D),
+                                )
+                              : const Icon(
+                                  Icons.pets_outlined,
+                                  color: Colors.black54,
+                                )
+                      ),
+                      const SizedBox(width: 8,),
+                      Text(
+                        posts!.posts[index].liked.toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ]
                   ),
-                ),
-              ]
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      posts!.posts[index].description
+                    ),
+                  ),
+                ],
+              )
             ),
           ],
         ),
-      ),
+      // ),
     );
   }
 
