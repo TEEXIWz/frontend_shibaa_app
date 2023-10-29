@@ -180,6 +180,8 @@ class _AddPostPageState extends State<AddPostPage> {
     final description = desController.text;
 
     final data = {
+      "uid" : '2',
+      "description" : description,
       "img" : bs64
     };
 
