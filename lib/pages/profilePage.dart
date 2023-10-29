@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(0, 24, 24, 24),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: Image.network(
@@ -114,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
     var liked;
     return Card(
        shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(0),
       ),
       color: Colors.white,
       child: Padding(

@@ -150,8 +150,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    submitData();
                     if (_formKey.currentState!.validate()) {
-                      // Sign up the user
+                      
                     }
                   },
                   style: ButtonStyle(
@@ -286,30 +287,24 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void submitData() async{
-    final name = _nameController;
-    final username = _usernameController;
-    final pwd = _passwordController;
-    final cpwd = _confirmPasswordController;
-    if (pwd == cpwd) {
-      msg=null;
-      final data = {
-        "name" : name,
-        "username" : username,
-        "password" : pwd,
-        "img" : bs64
-      };
+    final name = _nameController.text;
+    final username = _usernameController.text;
+    final pwd = _passwordController.text;
 
-      const url = 'http://192.168.1.15/backend_shibaa_app/user/register';
-      final uri = Uri.parse(url);
-      final response = await http.post(
-        uri,
-        body: jsonEncode(data)
-      );
+    final data = {
+      "name" : name,
+      "username" : username,
+      "password" : pwd,
+      "img" : bs64
+    };
 
-      print(response.body);
-    }
-    else{
-      msg='รหัสผ่านไม่ตรงกัน';
-    }
+    const url = 'http://192.168.1.15/backend_shibaa_app/user/register';
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(data)
+    );
+
+    print(response.body);
   }
 }
