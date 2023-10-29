@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import '../Services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'barBottom.dart';
+
 class AddPostPage extends StatefulWidget {
   const AddPostPage({Key? key}) : super(key: key);
 
@@ -154,6 +156,10 @@ class _AddPostPageState extends State<AddPostPage> {
                   ElevatedButton(
                     onPressed: () async {
                       submitData();
+                       Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const BarBottom()));
                     },
                     style: ButtonStyle(
                       minimumSize:
