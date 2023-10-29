@@ -3,7 +3,7 @@ import 'package:frontend_shibaa_app/pages/addPost.dart';
 import 'package:frontend_shibaa_app/pages/homePage.dart';
 import 'package:frontend_shibaa_app/pages/notiPage.dart';
 import 'package:frontend_shibaa_app/pages/profilePage.dart';
-import 'package:frontend_shibaa_app/pages/searhPage.dart';
+import 'package:frontend_shibaa_app/pages/searchPage.dart';
 
 
 class BarBottom extends StatefulWidget {
