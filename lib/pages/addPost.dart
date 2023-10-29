@@ -79,8 +79,7 @@ class _AddPostPageState extends State<AddPostPage> {
                           alignment: Alignment.center,
                           // height: 300,
                           // width: 350,
-                          child: Image.memory(
-                            base64Decode(bs64!),
+                          child: Image.file(_selectImg!,
                             height: 300,
                             width: 350,
                             fit: BoxFit.cover,
