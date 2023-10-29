@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import '../Services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -143,8 +144,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async{
-                    // Navigator.pushReplacement(context,
-                    //     MaterialPageRoute(builder: (context) => const BarBottom()));
+                      submitData();
                     },
                     style: ButtonStyle(
                       minimumSize:
@@ -176,12 +176,20 @@ class _AddPostPageState extends State<AddPostPage> {
     bs64 = base64Encode(imagebs64);
     btnImg = 'เปลี่ยนรูป';
   }
-  void submitData(){
+  void submitData() async{
     final description = desController.text;
 
     final data = {
       "img" : bs64
     };
-    
+
+    const url = 'http://192.168.1.15/backend_shibaa_app/post';
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(data)
+    );
+
+    print(response.body);
   }
 }

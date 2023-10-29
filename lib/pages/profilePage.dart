@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //   fit: BoxFit.cover,
           // ),
           Image.memory(
-            base64Decode(timgs!.timgs[2].img),
+            base64Decode(timgs!.timgs[3].img),
             fit: BoxFit.cover,
           ),
           const Padding(
@@ -183,4 +183,45 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+  // Widget list(){
+  //   return Expanded(
+  //     child: ListView.builder(
+  //       // ignore: unnecessary_null_comparison
+  //       itemCount: products!.products == null ? 0 : products!.products.length,
+  //       itemBuilder: (BuildContext context, int index) {
+  //       return row(index);
+  //       },
+  //     ),
+  //   );
+  // }
+
+  // Widget row(int index){
+  //   return Card(
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(10.0),
+  //       child: Column(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: <Widget>[
+  //           Container(
+  //             child: Image.network(products!.products[index].image),
+  //           ),Text(
+  //             products!.products[index].title,
+  //             style: const TextStyle(
+  //                 fontSize: 14.0,
+  //                 color: Colors.black,
+  //             ),
+  //           ),Text(
+  //             "Rate: " + products!.products[index].rating.rate.toString(),
+  //             style: const TextStyle(
+  //                 fontSize: 14.0,
+  //                 color: Colors.black,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
