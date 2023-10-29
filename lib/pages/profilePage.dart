@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend_shibaa_app/pages/editUser.dart';
 import '../Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 
@@ -96,7 +97,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 10,
                   ),
                   OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const EditPage()));
+                      },
                       style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all<Size>(
                             const Size(150, 50)),
