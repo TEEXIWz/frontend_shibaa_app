@@ -3,6 +3,8 @@ import 'package:frontend_shibaa_app/models/post.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:frontend_shibaa_app/models/tag.dart';
 import 'package:frontend_shibaa_app/models/tags.dart';
+import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:frontend_shibaa_app/models/users.dart';
 import 'package:http/http.dart' as http;
 
 class Services{
@@ -64,6 +66,29 @@ class Services{
     List<Tag> tags = parsed.map<Tag>((json) => Tag.fromJson(json)).toList();
     Tags p = Tags();
     p.tags = tags;
+    return p;
+  }
+
+  static Future<Users> getUsers() async {
+    try {
+      final response = await http.get(Uri.parse('$url/users'));
+      if (200 == response.statusCode) {
+        print(response.statusCode);
+        return parseUsers(response.body);
+      } else {
+        return Users();
+      }
+    } catch (e) {
+      print('Error ${e.toString()}');
+      return Users();
+    }
+  }
+
+  static Users parseUsers(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+    List<User> users = parsed.map<User>((json) => User.fromJson(json)).toList();
+    Users p = Users();
+    p.users = users;
     return p;
   }
   

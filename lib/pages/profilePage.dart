@@ -188,6 +188,27 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const Spacer(),
                   const Text("1h"),
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        child: Row(
+                          children: [
+                            Text("ลบ"),
+
+                          ],
+                        ),
+                      ),
+                      // const PopupMenuItem(
+                      //   child: Row(
+                      //     children: [
+                      //         Text("แก้ไข"),
+
+                      //     ],
+                      //   ),
+                      // )
+                      ],
+                      child:  const Icon(Icons.more_vert),
+                  ),
                 ],
               ),
             ),

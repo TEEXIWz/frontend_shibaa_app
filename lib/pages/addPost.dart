@@ -84,7 +84,7 @@ class _AddPostPageState extends State<AddPostPage> {
               const SizedBox(
                 height: 10,
               ),
-              // (_selectImg != null) ? Image.file(_selectImg!) : Container(),
+
               (bs64 != null)
                   ? Stack(
                       children: [
@@ -120,18 +120,14 @@ class _AddPostPageState extends State<AddPostPage> {
                             ),
                           ],
                         ),
-                        // Align(
-                        //   alignment: Alignment.topRight,
-                        //   child: IconButton(
-                        //     color: Colors.white,
-                        //     iconSize: 30,
-                        //     onPressed: () {},
-                        //     icon: const Icon(Icons.clear),
-                        //   ),
-                        // )
                       ],
                     )
-                  : profileImg(),
+                  : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      profileImg(),
+                    ],
+                  ),
                const SizedBox(
                 height: 20,
               ),
