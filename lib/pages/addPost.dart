@@ -19,10 +19,18 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
   File? _selectImg;
   String? bs64;
-  String btnImg = 'เพิ่มรูป';
   final desController = TextEditingController();
 
-  List<String> tags = ['อาหาร', 'ท่องเที่ยว', 'กีฬา', 'เกม', 'การ์ตูน', 'ความงาม','สุขภาพ','อื่นๆ'];
+  List<String> tags = [
+    'อาหาร',
+    'ท่องเที่ยว',
+    'กีฬา',
+    'เกม',
+    'การ์ตูน',
+    'ความงาม',
+    'สุขภาพ',
+    'อื่นๆ'
+  ];
   List<String> selectedTags = [];
   @override
   Widget build(BuildContext context) {
@@ -79,9 +87,8 @@ class _AddPostPageState extends State<AddPostPage> {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          // height: 300,
-                          // width: 350,
-                          child: Image.file(_selectImg!,
+                          child: Image.file(
+                            _selectImg!,
                             height: 300,
                             width: 350,
                             fit: BoxFit.cover,
@@ -100,79 +107,61 @@ class _AddPostPageState extends State<AddPostPage> {
                       ],
                     )
                   : Container(),
-              // (bs64 != null) ? Image.memory(
-              //                     base64Decode(bs64!),
-              //                     height: 300,
-              //                     width: 350,
-              //                     fit: BoxFit.cover,
-              //                     scale: 0.8,
-              //                     ) : Container(),
-              // const SizedBox(
-              //   height: 50,
-              //   child: TextField(
-              //     decoration: InputDecoration(
-              //       hintText: 'รูป',
-              //       border: OutlineInputBorder(),
-              //     ),
-              //   ),
-              // ),
               const SizedBox(
                 height: 10,
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      _pickImage();
-                      // Navigator.pushReplacement(context,
-                      //     MaterialPageRoute(builder: (context) => const BarBottom()));
-                    },
-                    style: ButtonStyle(
-                      minimumSize:
-                          MaterialStateProperty.all<Size>(const Size(80, 40)),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFFF8721D)),
-                    ),
-                    child: Text(
-                      btnImg,
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  DropDownMultiSelect(
-                    options: tags,
-                    selectedValues: selectedTags,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedTags = value;
-                      });
-                    },
-                    whenEmpty: 'เลือกหมวดหมู่',
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      submitData();
-                       Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const BarBottom()));
-                    },
-                    style: ButtonStyle(
-                      minimumSize:
-                          MaterialStateProperty.all<Size>(const Size(400, 50)),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFFF8721D)),
-                    ),
-                    child: const Text(
-                      'Post',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                ],
+
+              IconButton(
+                iconSize: 60,
+                icon: const Icon(
+                  Icons.add_a_photo_outlined,
+                  size: 60,
+                  color: Colors.black38,
+                ),
+                onPressed: () async {
+                  _pickImage();
+                },
+                style: ButtonStyle(
+                  minimumSize:
+                      MaterialStateProperty.all<Size>(const Size(80, 40)),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
+                ),
+              ),
+               const SizedBox(
+                height: 20,
+              ),
+              DropDownMultiSelect(
+                options: tags,
+                selectedValues: selectedTags,
+                onChanged: (value) {
+                  setState(() {
+                    selectedTags = value;
+                  });
+                },
+                whenEmpty: 'เลือกหมวดหมู่',
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  submitData();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const BarBottom()));
+                },
+                style: ButtonStyle(
+                  minimumSize:
+                      MaterialStateProperty.all<Size>(const Size(400, 50)),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
+                ),
+                child: const Text(
+                  'Post',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
             ],
           ),
@@ -182,15 +171,14 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   Future _pickImage() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery,maxHeight: 800,maxWidth: 800);
+    final returnedImage = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, maxHeight: 800, maxWidth: 800);
 
     setState(() {
       _selectImg = File(returnedImage!.path);
     });
     List<int> imagebs64 = File(_selectImg!.path).readAsBytesSync();
     bs64 = base64Encode(imagebs64);
-    btnImg = 'เปลี่ยนรูป';
   }
 
   void submitData() async {
