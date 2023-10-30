@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:frontend_shibaa_app/pages/SignUpPage.dart';
 import 'package:frontend_shibaa_app/pages/barBottom.dart';
@@ -12,7 +15,7 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-   bool _isPasswordVisible = false;
+  bool _isPasswordVisible = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,22 +85,20 @@ class LoginPageState extends State<LoginPage> {
               height: 50,
               child: TextField(
                 controller: _passwordController,
-               obscureText: !_isPasswordVisible,
-                decoration:  InputDecoration(
-                  hintText: 'Enter your password',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton( 
-                    icon : Icon(_isPasswordVisible
-                        ? Icons.visibility_off
-                        : Icons.visibility),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                   
-                ),
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
+                    hintText: 'Enter your password',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(_isPasswordVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    )),
               ),
             ),
             const SizedBox(height: 5),
@@ -119,8 +120,7 @@ class LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => const BarBottom()));
+                submitData();
               },
               style: ButtonStyle(
                 minimumSize:
@@ -137,5 +137,29 @@ class LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void submitData() async {
+    final username = _usernameController.text;
+    final pwd = _passwordController.text;
+
+    final data = {
+      "username": username,
+      "password": pwd,
+    };
+
+    const url = 'http://192.168.1.15/backend_shibaa_app/user/login';
+    final uri = Uri.parse(url);
+    final response = await http.post(uri, body: jsonEncode(data));
+    if (response.statusCode == 200) {
+      if (context.mounted) {
+        print(jsonDecode(response.body));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const BarBottom()));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("ชื่อผู้ใช้หรือรหัสผ่านผิด")));
+      print('Wrong');
+    }
   }
 }
