@@ -20,6 +20,20 @@ class Services{
     }
   }
 
+  static Future<Posts> getUserPosts() async {
+    try {
+      final response = await http.get(Uri.parse('$url/post/2'));
+      if (200 == response.statusCode) {
+        return parsePosts(response.body);
+      } else {
+        return Posts();
+      }
+    } catch (e) {
+      print('Error ${e.toString()}');
+      return Posts();
+    }
+  }
+
   static Posts parsePosts(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     List<Post> posts = parsed.map<Post>((json) => Post.fromJson(json)).toList();

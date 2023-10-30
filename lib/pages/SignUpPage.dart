@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:frontend_shibaa_app/pages/barBottom.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:frontend_shibaa_app/pages/loginpage.dart';
@@ -304,7 +305,17 @@ class _SignUpPageState extends State<SignUpPage> {
       uri,
       body: jsonEncode(data)
     );
+    if (response.statusCode == 201) {
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const BarBottom()
+          )
+        );
+      }
+    }
 
-    print(response.body);
+    print(response.statusCode);
   }
 }

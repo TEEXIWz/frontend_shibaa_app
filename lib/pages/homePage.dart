@@ -19,6 +19,10 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    fetchPost();
+  }
+
+  void fetchPost() async{
     String? title;
     isLoading = true;
     title = 'Loading products...';
@@ -27,7 +31,6 @@ class HomePageState extends State<HomePage> {
     Services.getPosts().then((postsFromServer) {
       setState(() {
         posts = postsFromServer;
-        print(posts);
         isLoading = false;
       });
     });
@@ -43,21 +46,27 @@ class HomePageState extends State<HomePage> {
           backgroundColor: Colors.white,
           leading: Image.network(
             'https://cdn-icons-png.flaticon.com/512/2171/2171947.png',
+            width: 10,
+            height: 10,
           ),
           bottom: const TabBar(
             isScrollable: true,
-            unselectedLabelColor: Colors.redAccent,
+            unselectedLabelColor: Colors.grey,
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.redAccent, Colors.orangeAccent]),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
-                    bottomLeft: Radius.circular(50),
-                    bottomRight: Radius.circular(50)),
-                color: Colors.redAccent),
-            
+              gradient: LinearGradient(
+                colors: [
+                  Colors.redAccent, Colors.orangeAccent
+                ]
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
+                bottomLeft: Radius.circular(50),
+                bottomRight: Radius.circular(50)
+              ),
+              color: Colors.redAccent
+            ),
             tabs: <Widget>[
               Tab(
                 text: "ทั้งหมด",
@@ -92,35 +101,33 @@ class HomePageState extends State<HomePage> {
                 color: Color(0xFFF8721D)
               ),
               onPressed: () {
-
+                
               },
             ),
           ],
         ),
-        body: Container(
+        body:Container( 
           child: isLoading
-            ? const Center(
+          ? const Center(
               child: CircularProgressIndicator(),
-            ) 
-            : Column(
+          ) 
+          : RefreshIndicator(
+            onRefresh: _getData,
+            child:Column(
               children: <Widget>[
               list(),
-            ],
-          ),
+              ],
+            )
+          )
         )
-        // TabBarView(
-        //   children: <Widget>[
-        //     SingleChildScrollView(
-        //       child: Column(
-        //         children: <Widget>[
-        //           list()
-        //         ],
-        //       ),
-        //     )
-        //   ],
-        // ),
       ),
     );
+  }
+
+  Future<void> _getData() async{
+    setState(() {
+      fetchPost();
+    });
   }
 
   Widget list(){
