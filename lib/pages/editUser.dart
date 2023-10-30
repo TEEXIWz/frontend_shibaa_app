@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:frontend_shibaa_app/pages/barBottom.dart';
+import 'package:frontend_shibaa_app/pages/homePage.dart';
 import 'package:frontend_shibaa_app/pages/profilePage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -19,10 +20,7 @@ class _EditPageState extends State<EditPage> {
 
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-
-  bool _agreedToPolicy = false;
+  final _descriptionController = TextEditingController();
 
   File? _selectImg;
   String? bs64;
@@ -32,9 +30,7 @@ class _EditPageState extends State<EditPage> {
   void dispose() {
     _nameController.dispose();
     _usernameController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -54,10 +50,9 @@ class _EditPageState extends State<EditPage> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const BarBottom() )),
+                      onPressed: () => Navigator.pop(
+                        context,
+                      ),
                     ),
                   ],
                 ),
@@ -79,7 +74,7 @@ class _EditPageState extends State<EditPage> {
                   controller: _nameController,
                   decoration: const InputDecoration(
                     labelText: 'Name',
-                     border: OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -102,11 +97,24 @@ class _EditPageState extends State<EditPage> {
                     return null;
                   },
                 ),
-                
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'description',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your description.';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.pop(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const ProfilePage()));
@@ -129,6 +137,7 @@ class _EditPageState extends State<EditPage> {
       ),
     );
   }
+
   Widget profileNoImg() {
     return Stack(
       children: [
@@ -136,50 +145,42 @@ class _EditPageState extends State<EditPage> {
           width: 130,
           height: 130,
           decoration: BoxDecoration(
-            border: Border.all(width: 4, color: Colors.white),
-            boxShadow: [
-              BoxShadow(
-                spreadRadius: 2,
-                blurRadius: 10,
-                color: Colors.black.withOpacity(0.1)
-              )
-            ],
-            shape: BoxShape.circle,
-            image: const DecorationImage(
-              fit: BoxFit.cover,
-              image: NetworkImage('https://cdn-icons-png.flaticon.com/512/219/219986.png')
-            )
-          ),
+              border: Border.all(width: 4, color: Colors.white),
+              boxShadow: [
+                BoxShadow(
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    color: Colors.black.withOpacity(0.1))
+              ],
+              shape: BoxShape.circle,
+              image: const DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                      'https://cdn-icons-png.flaticon.com/512/219/219986.png'))),
         ),
         Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                width: 4,
-                color: Colors.white
+            bottom: 0,
+            right: 0,
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 4, color: Colors.white),
+                  color: Colors.orange),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                color: Colors.white,
+                onPressed: () {
+                  _pickImage();
+                },
+                icon: const Icon(Icons.add),
               ),
-              color: Colors.orange
-            ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              color: Colors.white,
-              onPressed: (){
-                _pickImage();
-              },
-              icon: const Icon(
-                Icons.add
-              ),
-            ),
-          )
-        )
+            ))
       ],
     );
   }
+
   Widget profileImg() {
     return Stack(
       children: [
@@ -187,53 +188,43 @@ class _EditPageState extends State<EditPage> {
           width: 130,
           height: 130,
           decoration: BoxDecoration(
-            border: Border.all(width: 4, color: Colors.white),
-            boxShadow: [
-              BoxShadow(
-                spreadRadius: 2,
-                blurRadius: 10,
-                color: Colors.black.withOpacity(0.1)
-              )
-            ],
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: MemoryImage(base64Decode(bs64!))
-            )
-          ),
+              border: Border.all(width: 4, color: Colors.white),
+              boxShadow: [
+                BoxShadow(
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    color: Colors.black.withOpacity(0.1))
+              ],
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  fit: BoxFit.cover, image: MemoryImage(base64Decode(bs64!)))),
         ),
         Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            height: 40,
-            width: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                width: 4,
-                color: Colors.white
+            bottom: 0,
+            right: 0,
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(width: 4, color: Colors.white),
+                  color: Colors.orange),
+              child: IconButton(
+                padding: EdgeInsets.zero,
+                color: Colors.white,
+                onPressed: () {
+                  _pickImage();
+                },
+                icon: const Icon(Icons.edit),
               ),
-              color: Colors.orange
-            ),
-            child: IconButton(
-              padding: EdgeInsets.zero,
-              color: Colors.white,
-              onPressed: (){
-                _pickImage();
-              },
-              icon: const Icon(
-                Icons.edit
-              ),
-            ),
-          )
-        )
+            ))
       ],
     );
   }
 
-  Future _pickImage() async{
-    final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future _pickImage() async {
+    final returnedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     setState(() {
       _selectImg = File(returnedImage!.path);
@@ -241,5 +232,4 @@ class _EditPageState extends State<EditPage> {
     List<int> imagebs64 = File(_selectImg!.path).readAsBytesSync();
     bs64 = base64Encode(imagebs64);
   }
-
 }

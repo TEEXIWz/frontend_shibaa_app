@@ -109,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const EditPage()

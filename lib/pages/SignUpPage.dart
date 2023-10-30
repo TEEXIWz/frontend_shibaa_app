@@ -53,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pushReplacement(
+                      onPressed: () => Navigator.pop(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const LoginPage())),
