@@ -9,7 +9,7 @@ class User {
   late num uid;
   late String name;
   late String username;
-  late String password;
+  late String description;
   late String img;
   
   factory User.fromJson(Map<String,dynamic> json) => _$UserFromJson(json);

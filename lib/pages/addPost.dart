@@ -37,9 +37,12 @@ class _AddPostPageState extends State<AddPostPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Image.network(
-            'https://cdn-icons-png.flaticon.com/512/2171/2171947.png',
-            width: 10),
+        leading: const Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Image(
+            image: NetworkImage('https://cdn-icons-png.flaticon.com/512/2171/2171947.png'),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -95,39 +98,40 @@ class _AddPostPageState extends State<AddPostPage> {
                             scale: 0.8,
                           ),
                         ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            color: Colors.white,
-                            iconSize: 30,
-                            onPressed: () {},
-                            icon: const Icon(Icons.clear),
-                          ),
-                        )
+                        Row(
+                          children: [
+                            IconButton(
+                              color: Colors.white,
+                              iconSize: 30,
+                              onPressed: () {
+                                _pickImage();
+                              },
+                              icon: const Icon(Icons.refresh),
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              color: Colors.white,
+                              iconSize: 30,
+                              onPressed: () {
+                                bs64 = null;
+                                setState(() {});
+                              },
+                              icon: const Icon(Icons.clear),
+                            ),
+                          ],
+                        ),
+                        // Align(
+                        //   alignment: Alignment.topRight,
+                        //   child: IconButton(
+                        //     color: Colors.white,
+                        //     iconSize: 30,
+                        //     onPressed: () {},
+                        //     icon: const Icon(Icons.clear),
+                        //   ),
+                        // )
                       ],
                     )
-                  : Container(),
-              const SizedBox(
-                height: 10,
-              ),
-
-              IconButton(
-                iconSize: 60,
-                icon: const Icon(
-                  Icons.add_a_photo_outlined,
-                  size: 60,
-                  color: Colors.black38,
-                ),
-                onPressed: () async {
-                  _pickImage();
-                },
-                style: ButtonStyle(
-                  minimumSize:
-                      MaterialStateProperty.all<Size>(const Size(80, 40)),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
-                ),
-              ),
+                  : profileImg(),
                const SizedBox(
                 height: 20,
               ),
@@ -167,6 +171,46 @@ class _AddPostPageState extends State<AddPostPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget profileImg() {
+    return Stack(
+      children: [
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(width: 2, color: Colors.grey.withOpacity(0.6)),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            // boxShadow: [
+            //   BoxShadow(
+            //     spreadRadius: 2,
+            //     blurRadius: 10,
+            //     color: Colors.black.withOpacity(0.1)
+            //   )
+            // ],
+            shape: BoxShape.rectangle,
+          ),
+        ),
+        Container(
+            alignment: Alignment.center,
+            height: 100,
+            width: 100,
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              color: Colors.grey.withOpacity(0.6),
+              onPressed: (){
+                _pickImage();
+              },
+              icon: const Icon(
+                Icons.add_a_photo_outlined,
+                size: 30,
+              ),
+            ),
+        )
+      ],
     );
   }
 

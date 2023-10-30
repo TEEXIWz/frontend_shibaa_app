@@ -44,10 +44,11 @@ class HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          leading: Image.network(
-            'https://cdn-icons-png.flaticon.com/512/2171/2171947.png',
-            width: 10,
-            height: 10,
+          leading: const Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Image(
+              image: NetworkImage('https://cdn-icons-png.flaticon.com/512/2171/2171947.png'),
+            ),
           ),
           bottom: const TabBar(
             isScrollable: true,

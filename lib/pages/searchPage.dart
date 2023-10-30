@@ -15,9 +15,12 @@ class  _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Image.network(
-            'https://cdn-icons-png.flaticon.com/512/2171/2171947.png',
-            width: 10),
+        leading: const Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Image(
+            image: NetworkImage('https://cdn-icons-png.flaticon.com/512/2171/2171947.png'),
+          ),
+        ),
       ),
       body: Center(
          child: Column(
