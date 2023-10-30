@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend_shibaa_app/pages/editUser.dart';
+import 'package:frontend_shibaa_app/pages/edituser.dart';
 import '../Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 

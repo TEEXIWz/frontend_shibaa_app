@@ -1,8 +1,9 @@
-import 'dart:convert';
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend_shibaa_app/Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
+import 'package:frontend_shibaa_app/models/tags.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,7 +14,9 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   Posts? posts;
+  Tags? tags;
   bool isLoading = false;
+  bool isLoading2 = false;
   bool liked = false;
 
   @override
@@ -25,8 +28,17 @@ class HomePageState extends State<HomePage> {
   void fetchPost() async{
     String? title;
     isLoading = true;
+    isLoading2 = true;
     title = 'Loading products...';
     posts = Posts();
+    tags = Tags();
+
+    Services.getTags().then((tagsFromServer) {
+      setState(() {
+        tags = tagsFromServer;
+        isLoading2 = false;
+      });
+    });
 
     Services.getPosts().then((postsFromServer) {
       setState(() {
@@ -50,7 +62,8 @@ class HomePageState extends State<HomePage> {
               image: NetworkImage('https://cdn-icons-png.flaticon.com/512/2171/2171947.png'),
             ),
           ),
-          bottom: const TabBar(
+          bottom: isLoading2
+            ? const TabBar(
             isScrollable: true,
             unselectedLabelColor: Colors.grey,
             indicatorSize: TabBarIndicatorSize.tab,
@@ -68,32 +81,28 @@ class HomePageState extends State<HomePage> {
               ),
               color: Colors.redAccent
             ),
-            tabs: <Widget>[
-              Tab(
-                text: "ทั้งหมด",
-              ),
-              Tab(
-                text: "อาหาร",
-              ),
-              Tab(
-                text: "ท่องเที่ยว",
-              ),
-              Tab(
-                text: "กีฬา",
-              ),
-              Tab(
-                text: "เกม",
-              ),
-              Tab(
-                text: "การ์ตูน",
-              ),
-              Tab(
-                text: "ความงาม",
-              ),
-               Tab(
-                text: "สุขภาพ",
-              ),
-            ],
+            tabs: [Tab(text: 'ทั้งหมด',)]
+            )
+            : TabBar(
+            isScrollable: true,
+            unselectedLabelColor: Colors.grey,labelColor: Colors.redAccent,
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicator: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.redAccent,width: 2)),
+              // gradient: LinearGradient(
+              //   colors: [
+              //     Colors.redAccent, Colors.orangeAccent
+              //   ]
+              // ),
+              // borderRadius: BorderRadius.only(
+              //   topLeft: Radius.circular(50),
+              //   topRight: Radius.circular(50),
+              //   bottomLeft: Radius.circular(50),
+              //   bottomRight: Radius.circular(50)
+              // ),
+              // color: Colors.redAccent
+            ),
+            tabs: tabMaker()
           ),
           actions: [
             IconButton(
@@ -116,7 +125,7 @@ class HomePageState extends State<HomePage> {
             onRefresh: _getData,
             child:Column(
               children: <Widget>[
-              list(),
+                list(),
               ],
             )
           )
@@ -129,6 +138,14 @@ class HomePageState extends State<HomePage> {
     setState(() {
       fetchPost();
     });
+  }
+
+  tabMaker(){
+    List<Tab> tabs = [];
+    for (var i = 0; i < tags!.tags.length; i++) {
+      tabs.add(Tab(text: tags!.tags[i].name,));
+    }
+  return tabs;
   }
 
   Widget list(){

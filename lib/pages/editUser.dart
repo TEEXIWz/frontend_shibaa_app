@@ -2,9 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:frontend_shibaa_app/pages/barBottom.dart';
 import 'package:frontend_shibaa_app/pages/profilePage.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:frontend_shibaa_app/pages/loginpage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditPage extends StatefulWidget {
@@ -22,7 +20,7 @@ class _EditPageState extends State<EditPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  bool _agreedToPolicy = false;
+  final bool _agreedToPolicy = false;
 
   File? _selectImg;
   String? bs64;
