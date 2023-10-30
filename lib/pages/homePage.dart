@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   Posts? posts;
   Tags? tags;
+  String? title;
   bool isLoading = false;
   bool isLoading2 = false;
   bool liked = false;
@@ -26,7 +27,6 @@ class HomePageState extends State<HomePage> {
   }
 
   void fetchPost() async{
-    String? title;
     isLoading = true;
     isLoading2 = true;
     title = 'Loading products...';

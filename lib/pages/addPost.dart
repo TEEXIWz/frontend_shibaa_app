@@ -75,7 +75,7 @@ class _AddPostPageState extends State<AddPostPage> {
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
                 maxLines: 5,
-                maxLength: 50,
+                maxLength: 500,
                 decoration: const InputDecoration(
                   hintText: 'พิมพ์อะไรสักอย่าง..',
                   border: InputBorder.none,

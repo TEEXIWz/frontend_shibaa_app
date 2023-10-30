@@ -14,6 +14,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   Posts? posts;
+  String? title;
   bool isLoading = false;
   dynamic liked;
 
@@ -24,7 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void fetchPost() async{
-    String? title;
     isLoading = true;
     title = 'Loading products...';
     posts = Posts();

@@ -1,15 +1,35 @@
+
 import 'package:flutter/material.dart';
+import 'package:frontend_shibaa_app/Services.dart';
+import 'package:frontend_shibaa_app/models/users.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
- 
-
   @override
-  _SearchPageState createState() => _SearchPageState();
+  SearchPageState createState() => SearchPageState();
 }
 
-class  _SearchPageState extends State<SearchPage> {
+class  SearchPageState extends State<SearchPage> {
+  Users? users;
+  String? title;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    title = 'Loading products...';
+    users = Users();
+
+    Services.getUsers().then((usersFromServer) {
+      setState(() {
+        users = usersFromServer;
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
