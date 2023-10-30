@@ -120,7 +120,11 @@ class LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                submitData();
+                // submitData();
+                 Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BarBottom()));
               },
               style: ButtonStyle(
                 minimumSize:
@@ -139,27 +143,27 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void submitData() async {
-    final username = _usernameController.text;
-    final pwd = _passwordController.text;
+  // void submitData() async {
+  //   final username = _usernameController.text;
+  //   final pwd = _passwordController.text;
 
-    final data = {
-      "username": username,
-      "password": pwd,
-    };
+  //   final data = {
+  //     "username": username,
+  //     "password": pwd,
+  //   };
 
-    const url = 'http://192.168.1.15/backend_shibaa_app/user/login';
-    final uri = Uri.parse(url);
-    final response = await http.post(uri, body: jsonEncode(data));
-    if (response.statusCode == 200) {
-      if (context.mounted) {
-        print(jsonDecode(response.body));
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const BarBottom()));
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("ชื่อผู้ใช้หรือรหัสผ่านผิด")));
-      print('Wrong');
-    }
-  }
+  //   const url = 'http://192.168.1.15/backend_shibaa_app/user/login';
+  //   final uri = Uri.parse(url);
+  //   final response = await http.post(uri, body: jsonEncode(data));
+  //   if (response.statusCode == 200) {
+  //     if (context.mounted) {
+  //       print(jsonDecode(response.body));
+  //       Navigator.pushReplacement(context,
+  //           MaterialPageRoute(builder: (context) => const BarBottom()));
+  //     }
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("ชื่อผู้ใช้หรือรหัสผ่านผิด")));
+  //     print('Wrong');
+  //   }
+  // }
 }
