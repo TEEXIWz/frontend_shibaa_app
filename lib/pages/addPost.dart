@@ -19,6 +19,7 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
   File? _selectImg;
   String? bs64;
+  final titleController = TextEditingController();
   final desController = TextEditingController();
 
   List<String> tags = [
@@ -69,6 +70,20 @@ class _AddPostPageState extends State<AddPostPage> {
               ),
               const SizedBox(
                 height: 20,
+              ),
+              TextField(
+                controller: titleController,
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 5,
+                maxLength: 50,
+                decoration: const InputDecoration(
+                  hintText: 'หัวเรื่อง',
+                  border: InputBorder.none,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               TextField(
                 controller: desController,
@@ -222,9 +237,14 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   void submitData() async {
+    final title = desController.text;
     final description = desController.text;
 
-    final data = {"uid": '2', "description": description, "img": bs64};
+    final data = {
+      "uid": '2',
+      "title": title,
+      "description": description,
+      "img": bs64};
 
     const url = 'http://192.168.1.15/backend_shibaa_app/post';
     final uri = Uri.parse(url);

@@ -180,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        posts!.posts[index].username,
+                        posts!.posts[index].name,
                         style:
                             const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),

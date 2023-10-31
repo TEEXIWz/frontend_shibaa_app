@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage>{
   Posts? posts;
   Tags? tags;
   String? title;
@@ -53,8 +53,9 @@ class HomePageState extends State<HomePage> {
     return DefaultTabController(
       length: 8, // กำหนดจำนวน tab
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey.withOpacity(0.1),
         appBar: AppBar(
+          elevation: 0,
           backgroundColor: Colors.white,
           leading: const Padding(
             padding: EdgeInsets.all(10.0),
@@ -84,26 +85,14 @@ class HomePageState extends State<HomePage> {
             tabs: [Tab(text: 'ทั้งหมด',)]
             )
             : TabBar(
-            isScrollable: true,
-            unselectedLabelColor: Colors.grey,labelColor: Colors.redAccent,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.redAccent,width: 2)),
-              // gradient: LinearGradient(
-              //   colors: [
-              //     Colors.redAccent, Colors.orangeAccent
-              //   ]
-              // ),
-              // borderRadius: BorderRadius.only(
-              //   topLeft: Radius.circular(50),
-              //   topRight: Radius.circular(50),
-              //   bottomLeft: Radius.circular(50),
-              //   bottomRight: Radius.circular(50)
-              // ),
-              // color: Colors.redAccent
+              isScrollable: true,
+              unselectedLabelColor: Colors.grey,labelColor : Colors.redAccent,
+              // indicatorSize: TabBarIndicatorSize.tab,
+              indicator: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.redAccent,width: 2)),
+              ),
+              tabs: tabMaker()
             ),
-            tabs: tabMaker()
-          ),
           actions: [
             IconButton(
               icon: const Icon(
@@ -123,10 +112,13 @@ class HomePageState extends State<HomePage> {
           ) 
           : RefreshIndicator(
             onRefresh: _getData,
-            child:Column(
-              children: <Widget>[
-                list(),
-              ],
+            child: Container(
+              padding: const EdgeInsets.only(left: 5,right: 5,bottom: 5),
+              child: Row(
+                children: <Widget>[
+                  list()
+                ],
+              ),
             )
           )
         )
@@ -148,25 +140,47 @@ class HomePageState extends State<HomePage> {
   return tabs;
   }
 
+  // Widget list(){
+  //   return Expanded(
+  //     child: ListView.builder(
+  //       // ignore: unnecessary_null_comparison
+  //       itemCount: posts!.posts == null ? 0 : posts!.posts.length,
+  //       itemBuilder: (BuildContext context, int index) {
+  //       return post(index);
+  //       },
+  //     ),
+  //   );
+  // }
+
   Widget list(){
     return Expanded(
-      child: ListView.builder(
-        // ignore: unnecessary_null_comparison
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
+          // mainAxisExtent: 390,
+          childAspectRatio: 0.53
+          // MediaQuery.of(context).size.width/(MediaQuery.of(context).size.height / 4),
+        ),
         itemCount: posts!.posts == null ? 0 : posts!.posts.length,
-        itemBuilder: (BuildContext context, int index) {
-        return post(index);
+        itemBuilder: (BuildContext context, int index){
+          return post(index);
         },
-      ),
+      )
     );
   }
 
   Widget post(int index) {
     bool liked = false;
     return Container(
-      padding: const EdgeInsets.only(top: 10,bottom: 10),
-      color: Colors.white,
-      // child: Padding(
-      //   padding: const EdgeInsets.all(10),
+      // height: 500,
+      // width: 300,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+      ),
+      padding: const EdgeInsets.only(top: 3.5),
         child: Column(
           children: [
             Padding(
@@ -174,7 +188,7 @@ class HomePageState extends State<HomePage> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    radius: 20,
+                    radius: 13,
                     backgroundImage: 
                       MemoryImage(base64Decode(posts!.posts[index].uimg)),
                     backgroundColor: Colors.transparent,
@@ -187,22 +201,31 @@ class HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        posts!.posts[index].username,
+                        posts!.posts[index].name,
                         style:
-                            const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
                   const Spacer(),
-                  const Text("1h"),
+                  Text(
+                    calDateTime(posts!.posts[index].created_at),
+                    style:
+                      const TextStyle(fontSize: 12,),
+                  ),
                 ],
               ),
             ),
             const SizedBox(
               height: 5,
             ),
-            Image.memory(base64Decode(posts!.posts[index].img),
-            ),
+            Image(
+              height: 270,
+              fit: BoxFit.cover,
+              image: MemoryImage(
+                base64Decode(posts!.posts[index].img)
+                )
+              ),
             const SizedBox(
               height: 5,
             ),
@@ -215,35 +238,46 @@ class HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       IconButton(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          constraints: const BoxConstraints(),
-                          onPressed: () {
-                            
-                          },
-                          icon: liked == true
-                              ? const Icon(
-                                  Icons.pets,
-                                  color: Color(0xFFF8721D),
-                                )
-                              : const Icon(
-                                  Icons.pets_outlined,
-                                  color: Colors.black54,
-                                )
+                        padding: const EdgeInsets.only(bottom: 2),
+                        constraints: const BoxConstraints(),
+                        onPressed: () {
+                          
+                        },
+                        icon: liked == true
+                            ? const Icon(
+                                Icons.pets,
+                                size: 23,
+                                color: Color(0xFFF8721D),
+                              )
+                            : const Icon(
+                                Icons.pets_outlined,
+                                size: 23,
+                                color: Colors.black54,
+                              )
                       ),
                       const SizedBox(width: 8,),
                       Text(
                         posts!.posts[index].liked.toString(),
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ]
                   ),
+                  // Container(
+
+                  // ),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      posts!.posts[index].description
+                      posts!.posts[index].title,
+                      style:
+                            const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              height: 1.1
+                            ),
                     ),
                   ),
                 ],
@@ -251,8 +285,23 @@ class HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      // ),
     );
+  }
+  String calDateTime(String dt){
+    String res='';
+    if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 1) {
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inSeconds}s';
+    }
+    else if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 60){
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inMinutes}m';
+    }
+    else if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 1440){
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inHours}h';
+    }
+    else{
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inDays}d';
+    }
+    return res;
   }
 
 }

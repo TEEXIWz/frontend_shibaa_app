@@ -13,7 +13,5 @@ class User {
   late String img;
   
   factory User.fromJson(Map<String,dynamic> json) => _$UserFromJson(json);
-
-  get isFollowedByMe => null;
   Map<String, dynamic> toJson() => _$UserToJson(this);
 }
