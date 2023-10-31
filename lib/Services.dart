@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 class Services{
   static const String url = "http://192.168.1.15/backend_shibaa_app";
+  User? user;
 
   static Future<Posts> getPosts() async {
     try {
@@ -90,6 +91,11 @@ class Services{
     Users p = Users();
     p.users = users;
     return p;
+  }
+
+  static User parseUser(String responseBody) {
+    final Map<String,dynamic> parsed = json.decode(responseBody);
+    return User.fromJson(parsed);
   }
   
 }

@@ -42,18 +42,18 @@ class _EditPageState extends State<EditPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 60),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () => Navigator.pop(
-                        context,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 90),
+                // Row(
+                //   children: [
+                //     IconButton(
+                //       icon: const Icon(Icons.arrow_back),
+                //       onPressed: () => Navigator.pop(
+                //         context,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // const SizedBox(height: 20),
                 const Text(
                   'Edit Profile',
                   style: TextStyle(
@@ -62,7 +62,7 @@ class _EditPageState extends State<EditPage> {
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 Center(
                   child: (bs64 != null) ? profileImg() : profileNoImg(),
                 ),
@@ -71,7 +71,7 @@ class _EditPageState extends State<EditPage> {
                   controller: _nameController,
                   decoration: const InputDecoration(
                     labelText: 'Name',
-                    border: OutlineInputBorder(),
+                    border: UnderlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -85,7 +85,7 @@ class _EditPageState extends State<EditPage> {
                   controller: _usernameController,
                   decoration: const InputDecoration(
                     labelText: 'Username ',
-                    border: OutlineInputBorder(),
+                    border: UnderlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -99,7 +99,8 @@ class _EditPageState extends State<EditPage> {
                   controller: _descriptionController,
                   decoration: const InputDecoration(
                     labelText: 'description',
-                    border: OutlineInputBorder(),
+                    // floatingLabelBehavior: FloatingLabelBehavior.always,
+                    border: UnderlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -108,25 +109,47 @@ class _EditPageState extends State<EditPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(
+                const SizedBox(height: 60),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 45,vertical: 15),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const ProfilePage()));
-                  },
-                  style: ButtonStyle(
-                    minimumSize:
-                        MaterialStateProperty.all<Size>(const Size(300, 50)),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFFF8721D)),
-                  ),
-                  child: const Text(
-                    'บันทึก',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
+                      },
+                      child: const Text("CANCEL",
+                          style: TextStyle(
+                              fontSize: 14,
+                              letterSpacing: 2.2,
+                              color: Colors.black)),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:const Color(0xFFF8721D),
+                        padding: const EdgeInsets.symmetric(horizontal: 55,vertical: 15),
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "SAVE",
+                        style: TextStyle(
+                            fontSize: 14,
+                            letterSpacing: 2.2,
+                            color: Colors.white),
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),

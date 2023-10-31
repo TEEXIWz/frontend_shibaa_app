@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend_shibaa_app/Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:frontend_shibaa_app/models/tags.dart';
+import 'package:frontend_shibaa_app/models/user.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage>{
+  User? user;
   Posts? posts;
   Tags? tags;
   String? title;
@@ -116,6 +118,7 @@ class HomePageState extends State<HomePage>{
               padding: const EdgeInsets.only(left: 5,right: 5,bottom: 5),
               child: Row(
                 children: <Widget>[
+                  // Text(user!.username),
                   list()
                 ],
               ),
@@ -287,6 +290,7 @@ class HomePageState extends State<HomePage>{
         ),
     );
   }
+
   String calDateTime(String dt){
     String res='';
     if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 1) {

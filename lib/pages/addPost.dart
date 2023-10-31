@@ -79,7 +79,7 @@ class _AddPostPageState extends State<AddPostPage> {
                 maxLength: 50,
                 decoration: const InputDecoration(
                   hintText: 'หัวเรื่อง',
-                  border: InputBorder.none,
+                  // border: InputBorder.none,
                 ),
               ),
               const SizedBox(

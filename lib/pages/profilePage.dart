@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   const Spacer(),
-                  const Text("1h"),
+                  Text(calDateTime(posts!.posts[index].created_at),),
                   PopupMenuButton(
                     itemBuilder: (context) => [
                       const PopupMenuItem(
@@ -215,9 +215,9 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 5,
             ),
-            Container(
+            Image(
               height: 300,
-              child: Image.memory(base64Decode(posts!.posts[index].img)),
+              image: MemoryImage(base64Decode(posts!.posts[index].img))
             ),
             const SizedBox(
               height: 5,
@@ -259,7 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      posts!.posts[index].description
+                      posts!.posts[index].title
                     ),
                   ),
                 ],
@@ -269,5 +269,22 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       // ),
     );
+  }
+  
+  String calDateTime(String dt){
+    String res='';
+    if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 1) {
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inSeconds}s';
+    }
+    else if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 60){
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inMinutes}m';
+    }
+    else if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 1440){
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inHours}h';
+    }
+    else{
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inDays}d';
+    }
+    return res;
   }
 }
