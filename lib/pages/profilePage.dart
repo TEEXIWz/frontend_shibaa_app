@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend_shibaa_app/models/user.dart';
 import 'package:frontend_shibaa_app/pages/edituser.dart';
+import 'package:frontend_shibaa_app/pages/loginpage.dart';
+import 'package:hive/hive.dart';
 import '../Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 
@@ -9,19 +12,28 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
+  User? user;
   Posts? posts;
   String? title;
   bool isLoading = false;
   dynamic liked;
+  final _myBox = Hive.box('myBox');
 
   @override
   void initState() {
     super.initState();
     fetchPost();
+    getUser();
+  }
+
+  void getUser(){
+    String data = _myBox.get('user');
+    user = Services.parseUser(data);
+    print(data);
   }
 
   void fetchPost() async{
@@ -50,6 +62,21 @@ class _ProfilePageState extends State<ProfilePage> {
             image: NetworkImage('https://cdn-icons-png.flaticon.com/512/2171/2171947.png'),
           ),
         ),
+        actions: [
+          IconButton(
+              icon: const Icon(
+                Icons.exit_to_app,
+                color: Color(0xFFF8721D),
+              ),
+              onPressed: () {
+                _myBox.delete('user');
+                Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()));
+              },
+            )
+        ],
       ),
       body: Container(
         child: isLoading
@@ -62,23 +89,22 @@ class _ProfilePageState extends State<ProfilePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 50.0,
-                backgroundImage: NetworkImage(
-                    'https://i.pinimg.com/564x/26/dc/3c/26dc3c8e0b156e8eeeaf75964281058f.jpg'
+                backgroundImage: MemoryImage(base64Decode(user!.img)
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'LnwCatCat2000',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Text(
+                user!.name,
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 5),
-              const Text(
-                'รีวิวทุกอย่าง',
-                style: TextStyle(fontSize: 16),
+              Text(
+                user!.description,
+                style: const TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -109,12 +135,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
+                  Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => const EditPage()
+                        builder: (context) => const EditPage(),
+                        maintainState: false,
                     )
-                  );
+                  ).then((onGoBack));
                 },
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size>(
@@ -133,6 +159,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  onGoBack(dynamic value) {
+    getUser();
+    setState(() {});
   }
 
   Future<void> _getData() async{

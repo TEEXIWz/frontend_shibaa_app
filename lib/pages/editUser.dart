@@ -1,8 +1,12 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:frontend_shibaa_app/Services.dart';
+import 'package:frontend_shibaa_app/models/user.dart';
 import 'package:frontend_shibaa_app/pages/profilePage.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class EditPage extends StatefulWidget {
@@ -22,6 +26,8 @@ class _EditPageState extends State<EditPage> {
   File? _selectImg;
   String? bs64;
   String? msg;
+  User? user;
+  final _myBox = Hive.box('myBox');
 
   @override
   void dispose() {
@@ -29,6 +35,23 @@ class _EditPageState extends State<EditPage> {
     _usernameController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (_myBox.get('user')!=null) {
+      getUser();
+    }
+  }
+
+  void getUser(){
+    String data = _myBox.get('user');
+    user = Services.parseUser(data);
+    bs64 = user!.img;
+    _nameController.text = user!.name;
+    _usernameController.text = user!.username;
+    _descriptionController.text = user!.description;
   }
 
   @override
@@ -120,10 +143,7 @@ class _EditPageState extends State<EditPage> {
                             borderRadius: BorderRadius.circular(20)),
                       ),
                       onPressed: () {
-                        Navigator.pop(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ProfilePage()));
+                        Navigator.of(context).pop(true);
                       },
                       child: const Text("CANCEL",
                           style: TextStyle(
@@ -139,7 +159,9 @@ class _EditPageState extends State<EditPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        submitData();
+                      },
                       child: const Text(
                         "SAVE",
                         style: TextStyle(
@@ -251,5 +273,39 @@ class _EditPageState extends State<EditPage> {
     });
     List<int> imagebs64 = File(_selectImg!.path).readAsBytesSync();
     bs64 = base64Encode(imagebs64);
+  }
+
+  void submitData() async{
+    final name = _nameController.text;
+    final username = _usernameController.text;
+    final des = _descriptionController.text;
+
+    final data = {
+      "name" : name,
+      "username" : username,
+      "description" : des,
+      "img" : bs64
+    };
+
+    final response = await http.put(
+      Uri.parse('${Services.url}/user/edit/${user!.uid}'),
+      body: jsonEncode(data)
+    );
+    if (response.statusCode == 201) {
+      if (context.mounted) {
+        final response2 = await http.get(Uri.parse('${Services.url}/user/${user!.uid}'));
+        if (200 == response2.statusCode) {
+          if (context.mounted) {
+            _myBox.put('user', response2.body);
+            Navigator.pop(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProfilePage()
+              )
+            );
+          }
+        }
+      }
+    }
   }
 }

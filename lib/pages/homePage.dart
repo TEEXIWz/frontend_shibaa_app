@@ -5,6 +5,7 @@ import 'package:frontend_shibaa_app/Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:frontend_shibaa_app/models/tags.dart';
 import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:hive/hive.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,11 +22,18 @@ class HomePageState extends State<HomePage>{
   bool isLoading = false;
   bool isLoading2 = false;
   bool liked = false;
+  final _myBox = Hive.box('myBox');
 
   @override
   void initState() {
     super.initState();
     fetchPost();
+    getUser();
+  }
+
+  void getUser(){
+    String data = _myBox.get('user');
+    user = Services.parseUser(data);
   }
 
   void fetchPost() async{
@@ -118,7 +126,6 @@ class HomePageState extends State<HomePage>{
               padding: const EdgeInsets.only(left: 5,right: 5,bottom: 5),
               child: Row(
                 children: <Widget>[
-                  // Text(user!.username),
                   list()
                 ],
               ),

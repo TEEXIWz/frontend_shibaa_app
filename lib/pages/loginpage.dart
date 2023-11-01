@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:frontend_shibaa_app/pages/SignUpPage.dart';
@@ -13,28 +14,16 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  late bool _loggedin;
-
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+
+  final _myBox = Hive.box('myBox');
 
   @override
   void initState() {
     super.initState();
   }
-
-  // void _loadObject() async {
-  //   // อ่าน object จาก Local storage
-  //   String? objectString = _prefs.getString('object');
-
-  //   // แปลง string เป็น object
-  //   Map<String, dynamic> object = jsonDecode(objectString!);
-
-  //   // แสดงข้อมูล object
-  //   print('Name: ${object['name']}');
-  //   print('Age: ${object['age']}');
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -178,8 +167,8 @@ class LoginPageState extends State<LoginPage> {
     final response = await http.post(uri, body: jsonEncode(data));
     if (response.statusCode == 200) {
       if (context.mounted) {
-        print(jsonDecode(response.body));
-
+        // print(jsonDecode(response.body));
+        _myBox.put('user', response.body);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const BarBottom()));
       }

@@ -72,7 +72,7 @@ class Services{
 
   static Future<Users> getUsers() async {
     try {
-      final response = await http.get(Uri.parse('$url/users'));
+      final response = await http.get(Uri.parse('$url/user'));
       if (200 == response.statusCode) {
         print(response.statusCode);
         return parseUsers(response.body);
@@ -91,6 +91,21 @@ class Services{
     Users p = Users();
     p.users = users;
     return p;
+  }
+
+  static Future<User> getUser(int id) async {
+    try {
+      final response = await http.get(Uri.parse('$url/user/$id'));
+      if (200 == response.statusCode) {
+        print(response.statusCode);
+        return parseUser(response.body);
+      } else {
+        return User();
+      }
+    } catch (e) {
+      print('Error ${e.toString()}');
+      return User();
+    }
   }
 
   static User parseUser(String responseBody) {
