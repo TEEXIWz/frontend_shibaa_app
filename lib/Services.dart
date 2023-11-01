@@ -8,7 +8,7 @@ import 'package:frontend_shibaa_app/models/users.dart';
 import 'package:http/http.dart' as http;
 
 class Services{
-  static const String url = "http://192.168.1.15/backend_shibaa_app";
+  static const String url = "http://192.168.56.1/backend_shibaa_app";
   User? user;
 
   static Future<Posts> getPosts() async {
@@ -24,10 +24,23 @@ class Services{
       return Posts();
     }
   }
-
-  static Future<Posts> getUserPosts() async {
+  static Future<Posts> getUserPosts(int uid) async {
     try {
-      final response = await http.get(Uri.parse('$url/post/2'));
+      final response = await http.get(Uri.parse('$url/post/$uid'));
+      if (200 == response.statusCode) {
+        return parsePosts(response.body);
+      } else {
+        return Posts();
+      }
+    } catch (e) {
+      print('Error ${e.toString()}');
+      return Posts();
+    }
+  }
+
+  static Future<Posts> getPostsByType(int tid) async {
+    try {
+      final response = await http.get(Uri.parse('$url/posttag/$tid'));
       if (200 == response.statusCode) {
         return parsePosts(response.body);
       } else {

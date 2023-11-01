@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:frontend_shibaa_app/Services.dart';
 import 'package:frontend_shibaa_app/models/user.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -162,7 +163,7 @@ class LoginPageState extends State<LoginPage> {
       "password": pwd,
     };
 
-    const url = 'http://192.168.1.15/backend_shibaa_app/user/login';
+    const url = '${Services.url}/user/login';
     final uri = Uri.parse(url);
     final response = await http.post(uri, body: jsonEncode(data));
     if (response.statusCode == 200) {
@@ -173,7 +174,7 @@ class LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => const BarBottom()));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("ชื่อผู้ใช้หรือรหัสผ่านผิด")));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response.body)));
       print('Wrong');
     }
   }

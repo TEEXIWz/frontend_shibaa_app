@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:frontend_shibaa_app/pages/loginpage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:frontend_shibaa_app/Services.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -299,7 +300,7 @@ class _SignUpPageState extends State<SignUpPage> {
       "img" : bs64
     };
 
-    const url = 'http://192.168.1.15/backend_shibaa_app/user/register';
+    const url = '${Services.url}/user/register';
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,

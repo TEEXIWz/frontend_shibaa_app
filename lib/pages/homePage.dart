@@ -14,7 +14,9 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage>{
+class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
+  late TabController _tabController;
+
   User? user;
   Posts? posts;
   Tags? tags;
@@ -22,11 +24,13 @@ class HomePageState extends State<HomePage>{
   bool isLoading = false;
   bool isLoading2 = false;
   bool liked = false;
+  int _selectedIndex = 0;
   final _myBox = Hive.box('myBox');
 
   @override
   void initState() {
     super.initState();
+    fetchTag();
     fetchPost();
     getUser();
   }
@@ -36,26 +40,53 @@ class HomePageState extends State<HomePage>{
     user = Services.parseUser(data);
   }
 
-  void fetchPost() async{
-    isLoading = true;
+  void fetchTag() async{
     isLoading2 = true;
-    title = 'Loading products...';
-    posts = Posts();
-    tags = Tags();
 
+    tags = Tags();
     Services.getTags().then((tagsFromServer) {
       setState(() {
         tags = tagsFromServer;
+        _tabController = TabController(vsync: this, length: tags!.tags.length);
+        _tabController.addListener(() {
+          setState(() {
+            _selectedIndex = _tabController.index;
+            fetchPost();
+          });
+          print("Selected Index: " + _tabController.index.toString());
+        });
         isLoading2 = false;
       });
     });
+  }
 
-    Services.getPosts().then((postsFromServer) {
-      setState(() {
-        posts = postsFromServer;
-        isLoading = false;
+  void fetchPost() async{
+    isLoading = true;
+    title = 'Loading products...';
+    posts = Posts();
+
+    if (_selectedIndex == 0) {
+      Services.getPosts().then((postsFromServer) {
+        setState(() {
+          posts = postsFromServer;
+          isLoading = false;
+        });
       });
-    });
+    }
+    else{
+      Services.getPostsByType(_selectedIndex+1).then((poststagFromServer) {
+        setState(() {
+          posts = poststagFromServer;
+          isLoading = false;
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
   }
 
   @override
@@ -95,13 +126,13 @@ class HomePageState extends State<HomePage>{
             tabs: [Tab(text: 'ทั้งหมด',)]
             )
             : TabBar(
+              controller: _tabController,
+              tabs: tabMaker(),
               isScrollable: true,
-              unselectedLabelColor: Colors.grey,labelColor : Colors.redAccent,
-              // indicatorSize: TabBarIndicatorSize.tab,
-              indicator: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.redAccent,width: 2)),
-              ),
-              tabs: tabMaker()
+              unselectedLabelColor: Colors.grey,
+              labelColor : Colors.redAccent,
+              indicatorColor: Colors.redAccent,
+              indicatorSize: TabBarIndicatorSize.label,
             ),
           actions: [
             IconButton(
@@ -170,10 +201,10 @@ class HomePageState extends State<HomePage>{
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
           // mainAxisExtent: 390,
-          childAspectRatio: 0.53
+          childAspectRatio: 0.48
           // MediaQuery.of(context).size.width/(MediaQuery.of(context).size.height / 4),
         ),
-        itemCount: posts!.posts == null ? 0 : posts!.posts.length,
+        itemCount: posts!.posts.isEmpty ? 0 : posts!.posts.length,
         itemBuilder: (BuildContext context, int index){
           return post(index);
         },

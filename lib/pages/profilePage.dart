@@ -26,14 +26,13 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    fetchPost();
     getUser();
+    fetchPost();
   }
 
   void getUser(){
     String data = _myBox.get('user');
     user = Services.parseUser(data);
-    print(data);
   }
 
   void fetchPost() async{
@@ -41,7 +40,7 @@ class ProfilePageState extends State<ProfilePage> {
     title = 'Loading products...';
     posts = Posts();
 
-    Services.getUserPosts().then((postsFromServer) {
+    Services.getUserPosts(user!.uid.toInt()).then((postsFromServer) {
       setState(() {
         posts = postsFromServer;
         isLoading = false;

@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:frontend_shibaa_app/models/tags.dart';
+import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:hive/hive.dart';
 import 'package:multiselect/multiselect.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -19,20 +22,53 @@ class AddPostPage extends StatefulWidget {
 class _AddPostPageState extends State<AddPostPage> {
   File? _selectImg;
   String? bs64;
+  bool isLoading = false;
   final titleController = TextEditingController();
   final desController = TextEditingController();
+  User? user;
+  Tags? tags;
+  final _myBox = Hive.box('myBox');
 
-  List<String> tags = [
-    'อาหาร',
-    'ท่องเที่ยว',
-    'กีฬา',
-    'เกม',
-    'การ์ตูน',
-    'ความงาม',
-    'สุขภาพ',
-    'อื่นๆ'
-  ];
+  // List<String> tags = [
+  //   'อาหาร',
+  //   'ท่องเที่ยว',
+  //   'กีฬา',
+  //   'เกม',
+  //   'การ์ตูน',
+  //   'ความงาม',
+  //   'สุขภาพ',
+  //   'อื่นๆ'
+  // ];
+  late List<String> tagNames;
   List<String> selectedTags = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+    fetchTag();
+    
+  }
+
+  void getUser(){
+    String data = _myBox.get('user');
+    user = Services.parseUser(data);
+  }
+
+  void fetchTag() async{
+    isLoading = true;
+
+    tags = Tags();
+      Services.getTags().then((tagsFromServer) {
+        setState(() {
+          tags = tagsFromServer;
+          isLoading = false;
+        });
+        tagNames = tags!.tags.map((tag) => tag.name).toList();
+      });
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,19 +88,18 @@ class _AddPostPageState extends State<AddPostPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: NetworkImage(
-                        'https://i.pinimg.com/564x/26/dc/3c/26dc3c8e0b156e8eeeaf75964281058f.jpg'),
+                    backgroundImage: MemoryImage(base64Decode(user!.img)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    'LnwCatCat2000',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    user!.name,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -145,9 +180,10 @@ class _AddPostPageState extends State<AddPostPage> {
                   ),
                const SizedBox(
                 height: 20,
-              ),
-              DropDownMultiSelect(
-                options: tags,
+              ), isLoading
+              ? Container()
+              : DropDownMultiSelect(
+                options: tagNames,
                 selectedValues: selectedTags,
                 onChanged: (value) {
                   setState(() {
@@ -162,10 +198,6 @@ class _AddPostPageState extends State<AddPostPage> {
               ElevatedButton(
                 onPressed: () async {
                   submitData();
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BarBottom()));
                 },
                 style: ButtonStyle(
                   minimumSize:
@@ -195,13 +227,6 @@ class _AddPostPageState extends State<AddPostPage> {
             color: Colors.white,
             border: Border.all(width: 2, color: Colors.grey.withOpacity(0.6)),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
-            // boxShadow: [
-            //   BoxShadow(
-            //     spreadRadius: 2,
-            //     blurRadius: 10,
-            //     color: Colors.black.withOpacity(0.1)
-            //   )
-            // ],
             shape: BoxShape.rectangle,
           ),
         ),
@@ -237,11 +262,11 @@ class _AddPostPageState extends State<AddPostPage> {
   }
 
   void submitData() async {
-    final title = desController.text;
+    final title = titleController.text;
     final description = desController.text;
 
     final data = {
-      "uid": '2',
+      "uid": user!.uid,
       "title": title,
       "description": description,
       "img": bs64};
@@ -249,7 +274,28 @@ class _AddPostPageState extends State<AddPostPage> {
     const url = 'http://192.168.1.15/backend_shibaa_app/post';
     final uri = Uri.parse(url);
     final response = await http.post(uri, body: jsonEncode(data));
-
-    print(response.body);
+    if (response.statusCode == 201) {
+      int pid = jsonDecode(response.body);
+      for (var i = 0; i < tagNames.length; i++) {
+        if (selectedTags.contains(tagNames[i])) {
+          int tid = i+1;
+          final pt = {
+            "pid": pid,
+            "tid": tid
+          };
+          final response = await http.post(
+            Uri.parse('http://192.168.1.15/backend_shibaa_app/posttag'),
+            body: jsonEncode(pt)
+          );
+          print(response.body);
+        }
+      }
+      if (context.mounted) {
+        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const BarBottom()));
+      }
+    }
   }
 }
