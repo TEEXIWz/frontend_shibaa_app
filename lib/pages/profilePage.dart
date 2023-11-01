@@ -169,6 +169,7 @@ class ProfilePageState extends State<ProfilePage> {
   Future<void> _getData() async{
     setState(() {
       fetchPost();
+      getUser();
     });
   }
 
