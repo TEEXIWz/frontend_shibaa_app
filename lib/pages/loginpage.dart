@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:frontend_shibaa_app/Services.dart';
-import 'package:frontend_shibaa_app/models/user.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -156,7 +155,6 @@ class LoginPageState extends State<LoginPage> {
   void submitData() async {
     final username = _usernameController.text;
     final pwd = _passwordController.text;
-    User user = User();
 
     final data = {
       "username": username,
@@ -168,14 +166,14 @@ class LoginPageState extends State<LoginPage> {
     final response = await http.post(uri, body: jsonEncode(data));
     if (response.statusCode == 200) {
       if (context.mounted) {
-        // print(jsonDecode(response.body));
         _myBox.put('user', response.body);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const BarBottom()));
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response.body)));
-      print('Wrong');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response.body)));
+      }
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:frontend_shibaa_app/models/tags.dart';
 import 'package:frontend_shibaa_app/models/user.dart';
 import 'package:hive/hive.dart';
@@ -29,16 +28,6 @@ class _AddPostPageState extends State<AddPostPage> {
   Tags? tags;
   final _myBox = Hive.box('myBox');
 
-  // List<String> tags = [
-  //   'อาหาร',
-  //   'ท่องเที่ยว',
-  //   'กีฬา',
-  //   'เกม',
-  //   'การ์ตูน',
-  //   'ความงาม',
-  //   'สุขภาพ',
-  //   'อื่นๆ'
-  // ];
   late List<String> tagNames;
   List<String> selectedTags = [];
 
@@ -269,7 +258,8 @@ class _AddPostPageState extends State<AddPostPage> {
       "uid": user!.uid,
       "title": title,
       "description": description,
-      "img": bs64};
+      "img": bs64
+    };
 
     const url = 'http://192.168.1.15/backend_shibaa_app/post';
     final uri = Uri.parse(url);
@@ -283,11 +273,10 @@ class _AddPostPageState extends State<AddPostPage> {
             "pid": pid,
             "tid": tid
           };
-          final response = await http.post(
+          await http.post(
             Uri.parse('http://192.168.1.15/backend_shibaa_app/posttag'),
             body: jsonEncode(pt)
           );
-          print(response.body);
         }
       }
       if (context.mounted) {

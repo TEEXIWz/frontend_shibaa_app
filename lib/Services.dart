@@ -64,7 +64,6 @@ class Services{
     try {
       final response = await http.get(Uri.parse('$url/tags'));
       if (200 == response.statusCode) {
-        print(response.statusCode);
         return parseTags(response.body);
       } else {
         return Tags();
@@ -110,7 +109,6 @@ class Services{
     try {
       final response = await http.get(Uri.parse('$url/user/$id'));
       if (200 == response.statusCode) {
-        print(response.statusCode);
         return parseUser(response.body);
       } else {
         return User();

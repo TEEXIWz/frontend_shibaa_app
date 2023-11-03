@@ -5,7 +5,9 @@ import 'package:frontend_shibaa_app/Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:frontend_shibaa_app/models/tags.dart';
 import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:frontend_shibaa_app/pages/userprofilepage.dart';
 import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -53,7 +55,6 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
             _selectedIndex = _tabController.index;
             fetchPost();
           });
-          print("Selected Index: " + _tabController.index.toString());
         });
         isLoading2 = false;
       });
@@ -106,6 +107,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           ),
           bottom: isLoading2
             ? const TabBar(
+              // physics: AlwaysScrollableScrollPhysics(),
             isScrollable: true,
             unselectedLabelColor: Colors.grey,
             indicatorSize: TabBarIndicatorSize.tab,
@@ -178,20 +180,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
     for (var i = 0; i < tags!.tags.length; i++) {
       tabs.add(Tab(text: tags!.tags[i].name,));
     }
-  return tabs;
+    return tabs;
   }
-
-  // Widget list(){
-  //   return Expanded(
-  //     child: ListView.builder(
-  //       // ignore: unnecessary_null_comparison
-  //       itemCount: posts!.posts == null ? 0 : posts!.posts.length,
-  //       itemBuilder: (BuildContext context, int index) {
-  //       return post(index);
-  //       },
-  //     ),
-  //   );
-  // }
 
   Widget list(){
     return Expanded(
@@ -228,12 +218,17 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
               padding: const EdgeInsets.only(left: 12,right: 12),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    radius: 13,
-                    backgroundImage: 
-                      MemoryImage(base64Decode(posts!.posts[index].uimg)),
-                    backgroundColor: Colors.transparent,
-                  ),
+                  GestureDetector(
+                        onTap: () {
+                          // _myBox.put('data', )
+                        },
+                        child: CircleAvatar(
+                          radius: 13,
+                          backgroundImage: 
+                            MemoryImage(base64Decode(posts!.posts[index].uimg)),
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ),
                   const SizedBox(
                     width: 10,
                   ),
@@ -241,11 +236,17 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        posts!.posts[index].name,
-                        style:
-                            const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      GestureDetector(
+                        onTap: () {
+                          sendData(posts!.posts[index].uid.toInt());
+                        },
+                        child: Text(
+                          posts!.posts[index].name,
+                          style:
+                              const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                        ),
                       ),
+                      
                     ],
                   ),
                   const Spacer(),
@@ -327,6 +328,25 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
           ],
         ),
     );
+  }
+
+  onGoBack(dynamic value) {
+    setState(() {});
+  }
+
+  void sendData(int id) async {
+    final response = await http.get(Uri.parse('${Services.url}/user/$id'));
+    if (response.statusCode == 200) {
+      if (context.mounted) {
+        _myBox.put('data', response.body);
+        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const Userprofilepage(),
+                                maintainState: false,
+                            )
+                          ).then((onGoBack));
+      }
+    }
   }
 
   String calDateTime(String dt){

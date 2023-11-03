@@ -1,21 +1,18 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:frontend_shibaa_app/models/user.dart';
-import 'package:frontend_shibaa_app/pages/edituser.dart';
-import 'package:frontend_shibaa_app/pages/loginpage.dart';
-import 'package:hive/hive.dart';
-import '../Services.dart';
+import 'package:frontend_shibaa_app/Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
+import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:hive/hive.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class Userprofilepage extends StatefulWidget {
+  const Userprofilepage({super.key});
 
   @override
-  ProfilePageState createState() => ProfilePageState();
+  UserprofilepageState createState() => UserprofilepageState();
 }
 
-class ProfilePageState extends State<ProfilePage> {
+class UserprofilepageState extends State<Userprofilepage> {
   User? user;
   Posts? posts;
   String? title;
@@ -31,7 +28,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   void getUser(){
-    String data = _myBox.get('user');
+    String data = _myBox.get('data');
     user = Services.parseUser(data);
   }
 
@@ -51,31 +48,22 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: const Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Image(
-            image: NetworkImage('https://cdn-icons-png.flaticon.com/512/2171/2171947.png'),
-          ),
-        ),
-        actions: [
-          IconButton(
+        leading: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: IconButton(
               icon: const Icon(
-                Icons.exit_to_app,
+                Icons.arrow_back,
                 color: Color(0xFFF8721D),
               ),
               onPressed: () {
-                _myBox.delete('user');
-                Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()));
+                _myBox.delete('data');
+                Navigator.of(context).pop(true);
               },
             )
-        ],
+        ),
       ),
       body: Container(
         child: isLoading
@@ -134,12 +122,6 @@ class ProfilePageState extends State<ProfilePage> {
               ),
               OutlinedButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => const EditPage(),
-                        maintainState: false,
-                    )
-                  ).then((onGoBack));
                 },
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all<Size>(
@@ -158,11 +140,6 @@ class ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
-  }
-
-  onGoBack(dynamic value) {
-    getUser();
-    setState(() {});
   }
 
   Future<void> _getData() async{

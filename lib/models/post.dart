@@ -7,6 +7,7 @@ class Post {
   Post();
 
   late num id;
+  late num uid;
   late String name;
   late String title;
   late String description;
