@@ -261,7 +261,7 @@ class _AddPostPageState extends State<AddPostPage> {
       "img": bs64
     };
 
-    const url = 'http://192.168.1.15/backend_shibaa_app/post';
+    const url = '${Services.url}/post';
     final uri = Uri.parse(url);
     final response = await http.post(uri, body: jsonEncode(data));
     if (response.statusCode == 201) {
@@ -274,7 +274,7 @@ class _AddPostPageState extends State<AddPostPage> {
             "tid": tid
           };
           await http.post(
-            Uri.parse('http://192.168.1.15/backend_shibaa_app/posttag'),
+            Uri.parse('${Services.url}/backend_shibaa_app/posttag'),
             body: jsonEncode(pt)
           );
         }

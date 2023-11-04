@@ -225,18 +225,18 @@ class ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           children: [
                             Text("ลบ"),
-
+                    
                           ],
                         ),
                       ),
-                      // const PopupMenuItem(
-                      //   child: Row(
-                      //     children: [
-                      //         Text("แก้ไข"),
-
-                      //     ],
-                      //   ),
-                      // )
+                       const PopupMenuItem(
+                        child: Row(
+                          children: [
+                              Text("แก้ไข",),
+                              
+                          ],
+                        ),
+                      )
                       ],
                       child:  const Icon(Icons.more_vert),
                   ),

@@ -5,6 +5,8 @@ import 'package:frontend_shibaa_app/Services.dart';
 import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:frontend_shibaa_app/models/tags.dart';
 import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:frontend_shibaa_app/pages/detailpost.dart';
+import 'package:frontend_shibaa_app/pages/editpost.dart';
 import 'package:frontend_shibaa_app/pages/userprofilepage.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -220,7 +222,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                 children: [
                   GestureDetector(
                         onTap: () {
-                          // _myBox.put('data', )
+                          sendData(posts!.posts[index].uid.toInt());
                         },
                         child: CircleAvatar(
                           radius: 13,
@@ -261,13 +263,23 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
             const SizedBox(
               height: 5,
             ),
-            Image(
+            GestureDetector(
+              onTap: () {
+                  Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => const DetailPost(),
+                                maintainState: false,
+                            )
+                          ).then((onGoBack));
+              },
+              child: Image(
               height: 270,
               fit: BoxFit.cover,
               image: MemoryImage(
                 base64Decode(posts!.posts[index].img)
                 )
               ),
+            ),
             const SizedBox(
               height: 5,
             ),
@@ -283,7 +295,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                         padding: const EdgeInsets.only(bottom: 2),
                         constraints: const BoxConstraints(),
                         onPressed: () {
-                          
+          
                         },
                         icon: liked == true
                             ? const Icon(
