@@ -164,6 +164,7 @@ class LoginPageState extends State<LoginPage> {
     const url = '${Services.url}/user/login';
     final uri = Uri.parse(url);
     final response = await http.post(uri, body: jsonEncode(data));
+    print(response.statusCode);
     if (response.statusCode == 200) {
       if (context.mounted) {
         _myBox.put('user', response.body);
@@ -172,7 +173,8 @@ class LoginPageState extends State<LoginPage> {
       }
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response.body)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(response.body)));
       }
     }
   }

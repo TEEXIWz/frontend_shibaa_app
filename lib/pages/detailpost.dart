@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+
+import '../Services.dart';
+import '../models/post.dart';
 
 class DetailPost extends StatefulWidget {
   const DetailPost({Key? key}) : super(key: key);
@@ -11,6 +15,22 @@ class DetailPost extends StatefulWidget {
 
 class DetailPostState extends State<DetailPost> {
   bool liked = false;
+  Post? post;
+  String? title;
+  bool isLoading = false;
+  final _myBox = Hive.box('myBox');
+
+  @override
+  void initState() {
+    super.initState();
+    getPost();
+  }
+
+  void getPost() {
+    String data = _myBox.get('post');
+    print(data);
+    post = Services.parsePost(data);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +49,21 @@ class DetailPostState extends State<DetailPost> {
               },
             )),
       ),
-      body: Column(
+      body: SingleChildScrollView(
+        child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, bottom: 10, top: 10),
             child: Row(
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: NetworkImage(
-                      "https://i.pinimg.com/736x/e7/d3/83/e7d383ea4012a32d0bf090d85dd997c4.jpg"),
-                  backgroundColor: Colors.transparent,
+                  backgroundImage: MemoryImage(
+                    base64Decode(post!.uimg),
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Column(
@@ -49,90 +71,97 @@ class DetailPostState extends State<DetailPost> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "milo",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      post!.name,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  "1h",
+                  calDateTime(post!.created_at),
                 ),
               ],
             ),
-              
           ),
-          const Image(
-                  height: 300,
-                  image: NetworkImage("https://i.pinimg.com/736x/b8/9d/71/b89d713bf95be0b3b184fd5f9901318c.jpg"),
-              ),
+          Image(height: 300, image: MemoryImage(base64Decode(post!.img))),
           const SizedBox(
-                height: 5,
+            height: 5,
           ),
           Padding(
               padding: const EdgeInsets.only(left: 12),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                     IconButton(
-                          padding: const EdgeInsets.only(bottom: 5),
-                          constraints: const BoxConstraints(),
-                          onPressed: () {
-                            
-                          },
-                          icon: liked == true
-                              ? const Icon(
-                                  Icons.pets,
-                                  color: Color(0xFFF8721D),
-                                )
-                              : const Icon(
-                                  Icons.pets_outlined,
-                                  color: Colors.black54,
-                                )
-                      ),
-                      const SizedBox(width: 8,),
-                      const Text(
-                        "0",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            constraints: const BoxConstraints(),
+                            onPressed: () {},
+                            icon: liked == true
+                                ? const Icon(
+                                    Icons.pets,
+                                    color: Color(0xFFF8721D),
+                                  )
+                                : const Icon(
+                                    Icons.pets_outlined,
+                                    color: Colors.black54,
+                                  )),
+                        const SizedBox(
+                          width: 8,
                         ),
-                      ),
-                    ]
-                  ),
-                  const Align(
+                        Text(
+                          post!.liked.toString(),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ]),
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "gg",
-                      style:
-                            TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              height: 1.1
-                            ),
+                      post!.title,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          height: 1.1),
                     ),
                   ),
-                   const Align(
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "ggggggggggggggggggggggggggggggggggggggggggggggggggg",
-                      style:
-                            TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              height: 1.1
-                            ),
+                      post!.description,
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          height: 1.1),
                     ),
                   ),
                 ],
-              )
-            ),
+              )),
         ],
       ),
+      ),
     );
+  }
+
+  String calDateTime(String dt) {
+    String res = '';
+    if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 1) {
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inSeconds}s';
+    } else if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 60) {
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inMinutes}m';
+    } else if (DateTime.now().difference(DateTime.parse(dt)).inMinutes < 1440) {
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inHours}h';
+    } else {
+      res = '${DateTime.now().difference(DateTime.parse(dt)).inDays}d';
+    }
+    return res;
   }
 }

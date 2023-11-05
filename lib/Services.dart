@@ -26,7 +26,7 @@ class Services{
   }
   static Future<Posts> getUserPosts(int uid) async {
     try {
-      final response = await http.get(Uri.parse('$url/post/$uid'));
+      final response = await http.get(Uri.parse('$url/postbyuser/$uid'));
       if (200 == response.statusCode) {
         return parsePosts(response.body);
       } else {
@@ -124,4 +124,22 @@ class Services{
     return User.fromJson(parsed);
   }
   
+   static Future<Post> getPost(int id) async {
+    try {
+      final response = await http.get(Uri.parse('$url/post/$id'));
+      if (200 == response.statusCode) {
+        return parsePost(response.body);
+      } else {
+        return Post();
+      }
+    } catch (e) {
+      print('Error ${e.toString()}');
+      return Post();
+    }
+  }
+
+  static Post parsePost(String responseBody) {
+    final Map<String, dynamic> parsed = json.decode(responseBody);
+    return Post.fromJson(parsed);
+  }
 }

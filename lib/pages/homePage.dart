@@ -6,7 +6,6 @@ import 'package:frontend_shibaa_app/models/posts.dart';
 import 'package:frontend_shibaa_app/models/tags.dart';
 import 'package:frontend_shibaa_app/models/user.dart';
 import 'package:frontend_shibaa_app/pages/detailpost.dart';
-import 'package:frontend_shibaa_app/pages/editpost.dart';
 import 'package:frontend_shibaa_app/pages/userprofilepage.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
@@ -138,17 +137,17 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
               indicatorColor: Colors.redAccent,
               indicatorSize: TabBarIndicatorSize.label,
             ),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.search,
-                color: Color(0xFFF8721D)
-              ),
-              onPressed: () {
+          // actions: [
+          //   IconButton(
+          //     icon: const Icon(
+          //       Icons.search,
+          //       color: Color(0xFFF8721D)
+          //     ),
+          //     onPressed: () {
                 
-              },
-            ),
-          ],
+          //     },
+          //   ),
+          // ],
         ),
         body:Container( 
           child: isLoading
@@ -265,12 +264,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
             ),
             GestureDetector(
               onTap: () {
-                  Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const DetailPost(),
-                                maintainState: false,
-                            )
-                          ).then((onGoBack));
+                 sendDataPost(posts!.posts[index].id.toInt());
               },
               child: Image(
               height: 270,
@@ -295,7 +289,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                         padding: const EdgeInsets.only(bottom: 2),
                         constraints: const BoxConstraints(),
                         onPressed: () {
-          
+
                         },
                         icon: liked == true
                             ? const Icon(
@@ -357,6 +351,21 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                                 maintainState: false,
                             )
                           ).then((onGoBack));
+      }
+    }
+  }
+
+   void sendDataPost(int id) async {
+    final response = await http.get(Uri.parse('${Services.url}/post/$id'));
+    if (response.statusCode == 200) {
+      if (context.mounted) {
+        _myBox.put('post', response.body);
+        Navigator.of(context)
+            .push(MaterialPageRoute(
+              builder: (context) => const DetailPost(),
+              maintainState: false,
+            ))
+            .then((onGoBack));
       }
     }
   }
