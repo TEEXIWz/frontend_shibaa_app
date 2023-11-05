@@ -17,6 +17,7 @@ class Userprofilepage extends StatefulWidget {
 
 class UserprofilepageState extends State<Userprofilepage> {
   User? user;
+  User? myUser;
   Posts? posts;
   String? title;
   bool isLoading = false;
@@ -27,12 +28,39 @@ class UserprofilepageState extends State<Userprofilepage> {
   void initState() {
     super.initState();
     getUser();
+    getMyUser();
+    isfollow();
     fetchPost();
+  }
+
+  void isfollow() async{
+    final data = {
+      "uid" : user!.uid,
+      "follower" : myUser!.uid
+    };
+
+    const url = '${Services.url}/isfollow';
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(data)
+    );
+    if (response.statusCode == 200) {
+      isFollow = true;
+    }
+    else{
+      isFollow = false;
+    }
   }
 
   void getUser() {
     String data = _myBox.get('data');
     user = Services.parseUser(data);
+  }
+
+  void getMyUser() {
+    String data = _myBox.get('user');
+    myUser = Services.parseUser(data);
   }
 
   void fetchPost() async {
@@ -124,9 +152,10 @@ class UserprofilepageState extends State<Userprofilepage> {
                     !isFollow
                     ? ElevatedButton(
                       onPressed: () {
-                        isFollow = true;
+                        follow(user!.uid.toInt());
+                        isFollow =true;
                         setState(() {
-                          
+                            
                         });
                       },
                       style: ButtonStyle(
@@ -142,6 +171,7 @@ class UserprofilepageState extends State<Userprofilepage> {
                     )
                     : OutlinedButton(
                         onPressed: () {
+                          unfollow(user!.uid.toInt());
                           isFollow = false;
                           setState(() {
                             
@@ -161,6 +191,40 @@ class UserprofilepageState extends State<Userprofilepage> {
               ),
       ),
     );
+  }
+
+  void follow(int id) async{
+    final data = {
+      "uid" : myUser!.uid
+    };
+
+    final url = '${Services.url}/follow/$id';
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(data)
+    );
+    if (response.statusCode == 201) {
+      isfollow();
+      setState(() {
+      });
+    }
+  }
+
+  void unfollow(int id) async{
+    final data = {
+      "uid" : myUser!.uid
+    };
+    
+    final url = '${Services.url}/unfollow/$id';
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(data)
+    );
+    if (response.statusCode == 201) {
+      setState(() {});
+    }
   }
 
   Future<void> _getData() async {

@@ -328,18 +328,24 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
   }
 
   void sendData(int id) async {
-    final response = await http.get(Uri.parse('${Services.url}/user/$id'));
-    if (response.statusCode == 200) {
-      if (context.mounted) {
-        _myBox.put('data', response.body);
-        Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const Userprofilepage(),
-                                maintainState: false,
-                            )
-                          ).then((onGoBack));
+    if (id == user!.uid) {
+      print('bye');
+    }
+    else{
+      final response = await http.get(Uri.parse('${Services.url}/user/$id'));
+      if (response.statusCode == 200) {
+        if (context.mounted) {
+          _myBox.put('data', response.body);
+          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => const Userprofilepage(),
+                                  maintainState: false,
+                              )
+                            ).then((onGoBack));
+        }
       }
     }
+    
   }
 
    void sendDataPost(int id) async {
