@@ -308,15 +308,8 @@ class _SignUpPageState extends State<SignUpPage> {
     );
     if (response.statusCode == 201) {
       if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const BarBottom()
-          )
-        );
+        Navigator.of(context).pop(true);
       }
     }
-
-    print(response.statusCode);
   }
 }

@@ -125,12 +125,12 @@ class _EditPageState extends State<EditPage> {
                     // floatingLabelBehavior: FloatingLabelBehavior.always,
                     border: UnderlineInputBorder(),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your description.';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null || value.isEmpty) {
+                  //     return 'Please enter your description.';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 60),
                 Row(

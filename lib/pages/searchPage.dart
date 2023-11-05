@@ -62,12 +62,12 @@ class SearchPageState extends State<SearchPage> {
   Widget list() {
     return Expanded(
       child: ListView.builder(
-        itemCount: users!.users == null ? 0 : users!.users.length,
+        itemCount: users!.users.isEmpty ? 0 : users!.users.length,
         itemBuilder: (BuildContext context, int index) {
           return row(index);
         },
-      ), // ListView.builder
-    ); // Expanded
+      ),
+    );
   }
 
   Widget row(int index) {

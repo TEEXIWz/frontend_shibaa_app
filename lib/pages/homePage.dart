@@ -111,21 +111,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
               // physics: AlwaysScrollableScrollPhysics(),
             isScrollable: true,
             unselectedLabelColor: Colors.grey,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicator: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.redAccent, Colors.orangeAccent
-                ]
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50),
-                topRight: Radius.circular(50),
-                bottomLeft: Radius.circular(50),
-                bottomRight: Radius.circular(50)
-              ),
-              color: Colors.redAccent
-            ),
+            labelColor : Colors.white,
+            indicatorColor: Colors.white,
             tabs: [Tab(text: 'ทั้งหมด',)]
             )
             : TabBar(

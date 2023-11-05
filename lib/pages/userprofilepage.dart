@@ -21,6 +21,7 @@ class UserprofilepageState extends State<Userprofilepage> {
   String? title;
   bool isLoading = false;
   dynamic liked;
+  bool isFollow = false;
   final _myBox = Hive.box('myBox');
   @override
   void initState() {
@@ -92,18 +93,18 @@ class UserprofilepageState extends State<Userprofilepage> {
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 10),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '486',
-                          style: TextStyle(
+                          user!.follower.toString(),
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(width: 60),
+                        const SizedBox(width: 80),
                         Text(
-                          '397',
-                          style: TextStyle(
+                          user!.following.toString(),
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -120,15 +121,39 @@ class UserprofilepageState extends State<Userprofilepage> {
                     const SizedBox(
                       height: 10,
                     ),
-                    OutlinedButton(
-                        onPressed: () {},
+                    !isFollow
+                    ? ElevatedButton(
+                      onPressed: () {
+                        isFollow = true;
+                        setState(() {
+                          
+                        });
+                      },
+                      style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all<Size>(const Size(150, 50)),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(const Color(0xFFF8721D)),
+                      ),
+                      child: const Text(
+                        'Follow',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    )
+                    : OutlinedButton(
+                        onPressed: () {
+                          isFollow = false;
+                          setState(() {
+                            
+                          });
+                        },
                         style: ButtonStyle(
                           minimumSize: MaterialStateProperty.all<Size>(
                               const Size(150, 50)),
                         ),
-                        child: const Text('Edit',
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.black))),
+                        child: const Text('Following',
+                          style:
+                              TextStyle(fontSize: 18, color: Color(0xFFF8721D)))),
                     const SizedBox(height: 5),
                     list()
                   ],
@@ -193,25 +218,6 @@ class UserprofilepageState extends State<Userprofilepage> {
                 const Spacer(),
                 Text(
                   calDateTime(posts!.posts[index].created_at),
-                ),
-                PopupMenuButton(
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      child: Row(
-                        children: [
-                          Text("ลบ"),
-                        ],
-                      ),
-                    ),
-                    // const PopupMenuItem(
-                    //   child: Row(
-                    //     children: [
-                    //         Text("แก้ไข"),
-                    //     ],
-                    //   ),
-                    // )
-                  ],
-                  child: const Icon(Icons.more_vert),
                 ),
               ],
             ),

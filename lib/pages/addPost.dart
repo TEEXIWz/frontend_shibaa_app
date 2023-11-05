@@ -164,7 +164,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      profileImg(),
+                      pickImgIcon(),
                     ],
                   ),
                const SizedBox(
@@ -206,7 +206,7 @@ class _AddPostPageState extends State<AddPostPage> {
     );
   }
 
-  Widget profileImg() {
+  Widget pickImgIcon() {
     return Stack(
       children: [
         Container(

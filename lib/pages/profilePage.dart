@@ -106,18 +106,18 @@ class ProfilePageState extends State<ProfilePage> {
                       style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 10),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '486',
-                          style: TextStyle(
+                          user!.follower.toString(),
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(width: 60),
+                        const SizedBox(width: 80),
                         Text(
-                          '397',
-                          style: TextStyle(
+                          user!.following.toString(),
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -221,28 +221,24 @@ class ProfilePageState extends State<ProfilePage> {
                   calDateTime(posts!.posts[index].created_at),
                 ),
                 PopupMenuButton(
+
+                  offset: const Offset(0, 20),
+                  onSelected: (int value){
+                    if (value == 1) {
+                      sendDelPost(posts!.posts[index].id.toInt());
+                    }
+                    else{
+                      sendEditPost(posts!.posts[index].id.toInt());
+                    }
+                  },
                   itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () =>
-                                {sendDelPost(posts!.posts[index].id.toInt())},
-                            child: const Text("ลบ"),
-                          ),
-                        ],
-                      ),
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text("ลบ",style: TextStyle(fontSize: 14),textAlign: TextAlign.center),
                     ),
-                     PopupMenuItem(
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () =>
-                                {sendEditPost(posts!.posts[index].id.toInt())},
-                            child: const Text("แก้ไข"),
-                          ),
-                        ],
-                      ),
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Text("แก้ไข",style: TextStyle(fontSize: 14)),
                     )
                   ],
                   child: const Icon(Icons.more_vert),
@@ -326,7 +322,6 @@ class ProfilePageState extends State<ProfilePage> {
 
   void sendDelPost(int id) async {
     final response = await http.delete(Uri.parse('${Services.url}/post/$id'));
-    print(response.statusCode);
     if (response.statusCode == 200) {
         setState(() {});
     }
