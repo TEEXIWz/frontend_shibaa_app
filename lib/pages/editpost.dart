@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:multiselect/multiselect.dart';
+
+import '../Services.dart';
+import '../models/post.dart';
 
 class EditPost extends StatefulWidget {
   const EditPost({Key? key}) : super(key: key);
@@ -11,7 +17,31 @@ class EditPost extends StatefulWidget {
 class _EditPostState extends State<EditPost> {
   final titleController = TextEditingController();
   final desController = TextEditingController();
-    bool isLoading = false;
+  bool liked = false;
+  Post? post;
+  String? title;
+  bool isLoading = false;
+  final _myBox = Hive.box('myBox');
+
+  @override
+  void initState() {
+    super.initState();
+    getPost();
+  }
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    desController.dispose();
+    super.dispose();
+  }
+
+  void getPost() {
+    String data = _myBox.get('post');
+    post = Services.parsePost(data);
+    titleController.text = post!.title;
+    desController.text = post!.description;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,18 +66,18 @@ class _EditPostState extends State<EditPost> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+               Row(
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: NetworkImage("https://butwhytho.net/wp-content/uploads/2023/09/Gojo-Jujutsu-Kaisen-But-Why-Tho-2.jpg"),
+                    backgroundImage: MemoryImage(base64Decode(post!.img)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    "GOJO DD",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    post!.name,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

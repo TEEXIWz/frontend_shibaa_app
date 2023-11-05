@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_shibaa_app/models/user.dart';
+import 'package:frontend_shibaa_app/pages/editpost.dart';
 import 'package:frontend_shibaa_app/pages/edituser.dart';
 import 'package:frontend_shibaa_app/pages/loginpage.dart';
 import 'package:hive/hive.dart';
@@ -232,11 +233,13 @@ class ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                     ),
-                    const PopupMenuItem(
+                     PopupMenuItem(
                       child: Row(
                         children: [
-                          Text(
-                            "แก้ไข",
+                          GestureDetector(
+                            onTap: () =>
+                                {sendEditPost(posts!.posts[index].id.toInt())},
+                            child: const Text("แก้ไข"),
                           ),
                         ],
                       ),
@@ -328,6 +331,22 @@ class ProfilePageState extends State<ProfilePage> {
         setState(() {});
     }
   }
+
+  void sendEditPost(int id) async {
+    final response = await http.get(Uri.parse('${Services.url}/post/$id'));
+    if (response.statusCode == 200) {
+      if (context.mounted) {
+        _myBox.put('post', response.body);
+        Navigator.of(context)
+            .push(MaterialPageRoute(
+              builder: (context) => const EditPost(),
+              maintainState: false,
+            ))
+            .then((onGoBack));
+      }
+    }
+  }
+
 
   String calDateTime(String dt) {
     String res = '';

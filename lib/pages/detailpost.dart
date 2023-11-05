@@ -28,7 +28,6 @@ class DetailPostState extends State<DetailPost> {
 
   void getPost() {
     String data = _myBox.get('post');
-    print(data);
     post = Services.parsePost(data);
   }
 
